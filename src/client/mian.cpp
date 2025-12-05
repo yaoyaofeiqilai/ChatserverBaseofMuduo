@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "keyguard.hpp"
 atomic_bool userIsLogin;
 sem_t acksem;
 
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
         cout << "choice:";
         int choice = 0;
         cin >> choice;
-        //cin.get(); // 读掉缓冲区残留的回车
+        cin.get(); // 读掉缓冲区残留的回车
 
         switch (choice)
         {
@@ -79,6 +80,7 @@ int main(int argc, char **argv)
             cin.ignore(numeric_limits<streamsize>::max(), '\n');   //清除输入缓冲区
             break;
         }
+        this_thread::sleep_for(chrono::milliseconds(100));
     }
 
     return 0;

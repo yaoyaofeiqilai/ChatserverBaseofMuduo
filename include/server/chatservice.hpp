@@ -1,5 +1,5 @@
 //编写一个唯一实例的服务类，实现对各种消息类型的处理
-    //静态函数+静态成员可以实现唯一实例，构造函数在private中
+//静态函数+静态成员可以实现唯一实例，构造函数在private中
 //使用map存储不同msgid的信息的处理函数
 
 #ifndef CHATSERVICE_HPP
@@ -15,7 +15,7 @@
 #include"offlinemsgoperate.hpp"
 #include "groupoperate.hpp"
 #include "redis.hpp"
-
+#include "keyguard.hpp"
 using namespace muduo;
 using namespace muduo::net;
 using json=nlohmann::json;
@@ -64,6 +64,10 @@ class ChatService
     //处理从redis上监听的信息处理函数
     void redisMessageHandler(int userid,string message);
 
+    //处理客户端发送来的密钥
+    void clientAESkey(const TcpConnectionPtr &conn, json &js, Timestamp time);
+
+    string serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js);
     private :
     //构造函数
     ChatService();

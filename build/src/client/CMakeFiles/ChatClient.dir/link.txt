@@ -1,0 +1,1 @@
+/usr/bin/c++  -g  -rdynamic CMakeFiles/ChatClient.dir/client.cpp.o CMakeFiles/ChatClient.dir/mian.cpp.o CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o  -o ../../../bin/ChatClient  -lpthread -lssl -lcrypto 

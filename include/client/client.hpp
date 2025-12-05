@@ -26,6 +26,7 @@ using json = nlohmann::json;
 #include "public.hpp"
 #include <semaphore.h>
 #include <atomic>
+#include "keyguard.hpp"
 // 记录当前系统登录的用户信息
 extern User currentUser;
 // 记录当前登录用户的好友列表信息
@@ -76,8 +77,11 @@ void addgroup(int, string);
 void groupchat(int, string);
 // "loginout" command handler
 void loginout(int, string);
+//保存RSA密钥并发送AES密钥给服务器
+void keyHandler(int& clientfd ,json& js);
 
-
+//封装加密方法
+string msgEncryption(string & str);
 //聊天菜单
 void mainMenu(int);
 #endif

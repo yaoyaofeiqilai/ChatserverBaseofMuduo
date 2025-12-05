@@ -4,7 +4,6 @@
 User currentUser;
 vector<User> currentUserFriendList;
 vector<Group> currentUserGroupList;
-
 void showCurrentUserData()
 {
     cout << "======================login user======================" << endl;
@@ -63,15 +62,17 @@ void login(int &clientfd)
     js["password"] = pwd;
     string request = js.dump();
 
-    int len = send(clientfd, request.c_str(), strlen(request.c_str()) + 1, 0);
+    // 加密
+    request = msgEncryption(request);
+    int len = send(clientfd, request.c_str(), request.size(), 0);
     if (len == -1)
     {
         cerr << "send login msg error:" << request << endl;
     }
     sem_wait(&acksem);
-    if(userIsLogin)
+    if (userIsLogin)
     {
-         // 进入菜单界面
+        // 进入菜单界面
         mainMenu(clientfd);
     }
 }
@@ -91,32 +92,12 @@ void reg(int &clientfd)
     js["name"] = name;
     js["password"] = pwd;
     string request = js.dump();
-
-    int len = send(clientfd, request.c_str(), strlen(request.c_str()) + 1, 0);
+    // 加密
+    request = msgEncryption(request);
+    int len = send(clientfd, request.c_str(), request.length(), 0);
     if (len == -1)
     {
         cerr << "send reg msg error:" << request << endl;
-    }
-    else
-    {
-        char buffer[1024] = {0};
-        // 接收服务器端的响应消息
-        int len = recv(clientfd, buffer, 1024, 0);
-        if (len == -1)
-        {
-            cerr << "recv error" << endl;
-            return;
-        }
-        // 反序列化
-        json js = json::parse(buffer);
-        if (0 == js["errno"].get<int>())
-        {
-            cout << "register success, userid is " << js["userid"] << ", do not forget it!" << endl;
-        }
-        else
-        {
-            cout << "register failed, the name has been used!" << endl;
-        }
     }
 }
 
@@ -125,17 +106,26 @@ void reg(int &clientfd)
 // 这样就可以同时接收和发送消息，不会出现发消息(阻塞)导致无法接收消息的情况
 void readTaskHandler(int clientfd)
 {
+    bool keyflag = false;
+
     for (;;)
     {
-        char buffer[1024] = {0};
-        int len = recv(clientfd, buffer, 1024, 0);
+        string buffer(1024, '0');
+        int len = recv(clientfd, &buffer[0], 1024, 0);
         if (len == -1 || len == 0)
         {
             cerr << "recv error" << endl;
             exit(-1);
         }
-
-        // 接收到数据
+        buffer = buffer.substr(0, len);
+        if (keyflag)
+        {
+            // 解密字符串
+            KeyGuard *keyguard = KeyGuard::GetInstance();
+            string key;
+            keyguard->getAESkey(key);
+            buffer = keyguard->MsgAESDecrypt(key, buffer);
+        }
         json js = json::parse(buffer);
         int msgtype = js["msgid"].get<int>();
         if (msgtype == ONE_CHAT_MSG)
@@ -145,6 +135,34 @@ void readTaskHandler(int clientfd)
         if (msgtype == GROUP_CHAT_MSG)
         {
             cout << "[群消息：" << js["groupid"] << ']' << js["username"] << ':' << js["message"] << endl;
+        }
+        if(msgtype==REG_MSG_ACK)
+        {
+            if(0==js["errno"])
+            {
+                cout<<"register success! userid="<<js["userid"]<<endl;
+            }
+            else
+            {
+                cout<<"register failed! errmsg="<<js["errmsg"]<<endl;
+            }
+        }
+        if (msgtype == RAS_KEY_MSG)
+        {
+            // 保存rsa密钥发送aeskey
+            keyHandler(clientfd, js);
+            keyflag = true;
+        }
+        if(msgtype==CREATE_GROUP_MSG_ACK)
+        {
+            if(0==js["errno"])
+            {
+                cout<<"create group success! groupid="<<js["groupid"]<<endl;
+            }
+            else
+            {
+                cout<<"create group failed! errmsg="<<js["errmsg"]<<endl;
+            }
         }
         if (msgtype == LOGIN_MSG_ACK)
         {
@@ -235,7 +253,7 @@ void loginReaction(json response)
     {
         // 登录失败
         cerr << response["errmsg"] << endl;
-        userIsLogin=false;
+        userIsLogin = false;
     }
 }
 
@@ -304,7 +322,9 @@ void chat(int clientfd, string str)
     js["time"] = getCurrentTime();
 
     // 发送数据
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -325,7 +345,9 @@ void addfriend(int clientfd, string str)
     js["id"] = currentUser.get_id();
     js["friendid"] = friendid;
     js["msgid"] = ADD_FRIEND_MSG;
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -347,8 +369,9 @@ void creategroup(int clientfd, string str)
     js["groupdesc"] = str.substr(index + 1, str.size() - index);
     js["userid"] = currentUser.get_id();
 
-    // 发送数据
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -362,9 +385,10 @@ void addgroup(int clientfd, string str)
     js["msgid"] = ADD_GROUP_MSG;
     js["groupid"] = groupid;
     js["userid"] = currentUser.get_id();
-
-    // 发送数据
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    // 加密发送数据
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -387,8 +411,9 @@ void groupchat(int clientfd, string str)
     js["userid"] = currentUser.get_id();
     js["username"] = currentUser.get_name();
 
-    // 发送数据
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -403,7 +428,9 @@ void loginout(int clientfd, string)
     js["msgid"] = LOGINOUT_MSG;
     userIsLogin = false;
     // 发送数据
-    int len = send(clientfd, js.dump().c_str(), strlen(js.dump().c_str()) + 1, 0);
+    string text = js.dump();
+    string cipherText = msgEncryption(text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
         cerr << "send massage failed" << endl;
@@ -441,4 +468,37 @@ void mainMenu(int clientfd)
         // 调用对应类型的处理函数
         it->second(clientfd, buffer.substr(index + 1, buffer.size() - index));
     }
+}
+// 初始化密钥
+void keyHandler(int &clientfd, json &js)
+{
+    KeyGuard *keyguard = KeyGuard::GetInstance();
+    keyguard->setPublickey(js["publickey"].get<string>());
+    string aeskey;
+    string publickey;
+
+    keyguard->getPublickey(publickey);
+    keyguard->generateAESkey(aeskey);
+    aeskey = keyguard->base64_encode(aeskey);
+    // 发送AES密钥给服务器
+    json aesjs;
+    aesjs["msgid"] = AES_KEY_MSG;
+    aesjs["aeskey"] = aeskey;
+    string text = aesjs.dump();
+    string cipherText = keyguard->RsaEncrypt(publickey, text);
+    int len = send(clientfd, cipherText.c_str(), cipherText.size(), 0);
+    if (len == -1)
+    {
+        cerr << "send aes key error" << endl;
+    }
+}
+
+string msgEncryption(string &str)
+{
+    // 获取密钥
+    KeyGuard *keyguard = KeyGuard::GetInstance();
+    string aeskey;
+    keyguard->getAESkey(aeskey);
+    // 加密
+    return keyguard->MsgAESEncrypt(aeskey, str);
 }
