@@ -12,11 +12,11 @@ src/client/CMakeFiles/ChatClient.dir/client.cpp.o: ../include/server/dataoperate
 src/client/CMakeFiles/ChatClient.dir/client.cpp.o: ../thridparty/json.hpp
 src/client/CMakeFiles/ChatClient.dir/client.cpp.o: ../src/client/client.cpp
 
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../include/client/client.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../include/public/keyguard.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../include/public/public.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../include/server/dataoperate/group.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../include/server/dataoperate/user.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../thridparty/json.hpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../src/client/mian.cpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../include/client/client.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../include/public/keyguard.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../include/public/public.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../include/server/dataoperate/group.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../include/server/dataoperate/user.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../thridparty/json.hpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../src/client/main.cpp
 

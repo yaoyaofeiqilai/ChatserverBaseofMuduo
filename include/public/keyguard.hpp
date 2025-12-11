@@ -17,6 +17,7 @@
 #include <muduo/net/TcpConnection.h>
 #include <algorithm> // 用于 std::find
 #include <cctype>    // 用于 isalnum
+#include <mutex>
 using namespace std;
 using namespace muduo::net;
 
@@ -31,6 +32,8 @@ private:
     unordered_map<TcpConnectionPtr, string> ConntoAESkeyMap_;
     KeyGuard() = default;
     ~KeyGuard() = default;
+
+    mutex ConntoAESkeyMapMutex_;
 
     // 在AES加解密函数中，每次都调用OpenSSL_add_all_algorithms()是不必要的，
     // 而且这个函数在OpenSSL 1.1.0+中已经废弃。

@@ -26,7 +26,7 @@ bool  Mysql::connect()
     // 初始化MYSQL连接句柄
     conn_ = mysql_init(nullptr);
     if (conn_ == nullptr) {
-        LOG_INFO << "mysql_init failed!";
+        //LOG_INFO << "mysql_init failed!";
         return false;
     }
 
@@ -36,10 +36,10 @@ bool  Mysql::connect()
     if(ptr!=nullptr)  
     {
         mysql_query(conn_,"set names gbk");
-        LOG_INFO<<"connect mysql success!";
+        //LOG_INFO<<"connect mysql success!";
     }
     else{
-        LOG_INFO<<"connect mysql failed!";
+        //LOG_INFO<<"connect mysql failed!";
     }
     return ptr!=nullptr;
 }
@@ -49,8 +49,8 @@ bool  Mysql::connect()
  {
     if(mysql_query(conn_,sql.c_str()))
     {
-       LOG_INFO << __FILE__ << ":" << __LINE__ << ":"
-       << sql << "update success !";
+       //LOG_INFO << __FILE__ << ":" << __LINE__ << ":"
+       //<< sql << "update success !";
         return false;
     }
     return true;
@@ -61,8 +61,8 @@ MYSQL_RES* Mysql:: query(std::string sql)  //数据库的查询
 {
     if(mysql_query(conn_,sql.c_str()))
     {
-       LOG_INFO << __FILE__ << ":" << __LINE__ << ":"
-       << sql << "query failed! pelase check the message!";
+       //LOG_INFO << __FILE__ << ":" << __LINE__ << ":"
+       //<< sql << "query failed! pelase check the message!";
        return nullptr;
     }
     return mysql_use_result(conn_);

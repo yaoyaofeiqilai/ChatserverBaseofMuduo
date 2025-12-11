@@ -3,8 +3,7 @@
 using namespace std;
 
 Redis::Redis()
-    : publish_context_(nullptr)
-    , subscribe_context_(nullptr)
+    : publish_context_(nullptr), subscribe_context_(nullptr)
 {
 }
 
@@ -40,14 +39,6 @@ bool Redis::connect()
     }
     redisCommand(publish_context_, "auth yaoyaofeiqilai1111");
     redisCommand(subscribe_context_, "auth yaoyaofeiqilai1111");
-    // 在单独的线程中，监听通道上的事件，有消息给业务层进行上报
-    thread t([&]() {
-        observer_channel_message();
-    });
-    t.detach();
-
-    cout << "connect redis-server success!" << endl;
-
     return true;
 }
 
@@ -121,7 +112,7 @@ void Redis::observer_channel_message()
         if (reply != nullptr && reply->element[2] != nullptr && reply->element[2]->str != nullptr)
         {
             // 给业务层上报通道上发生的消息
-            notify_message_handler_(atoi(reply->element[1]->str) , reply->element[2]->str);
+            notify_message_handler_(atoi(reply->element[1]->str), reply->element[2]->str);
         }
 
         freeReplyObject(reply);
@@ -130,7 +121,17 @@ void Redis::observer_channel_message()
     cerr << ">>>>>>>>>>>>> observer_channel_message quit <<<<<<<<<<<<<" << endl;
 }
 
-void Redis::init_notify_handler(function<void(int,string)> fn)
+void Redis::init_notify_handler(function<void(int, string)> fn)
 {
     this->notify_message_handler_ = fn;
+}
+
+void Redis::beginlisten()
+{
+    // 在单独的线程中，监听通道上的事件，有消息给业务层进行上报
+    thread t([&]()
+             { observer_channel_message(); });
+    t.detach();
+
+    // cout << "connect redis-server success!" << endl;
 }

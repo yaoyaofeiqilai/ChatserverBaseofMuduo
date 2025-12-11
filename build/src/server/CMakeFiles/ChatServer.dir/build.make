@@ -83,18 +83,18 @@ src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/chatservice.cpp.s"
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/chatservice.cpp -o CMakeFiles/ChatServer.dir/chatservice.cpp.s
 
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../src/server/mian.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/server/CMakeFiles/ChatServer.dir/mian.cpp.o"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatServer.dir/mian.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/server/mian.cpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../src/server/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object src/server/CMakeFiles/ChatServer.dir/main.cpp.o"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatServer.dir/main.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/server/main.cpp
 
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatServer.dir/mian.cpp.i"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/server/mian.cpp > CMakeFiles/ChatServer.dir/mian.cpp.i
+src/server/CMakeFiles/ChatServer.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatServer.dir/main.cpp.i"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/server/main.cpp > CMakeFiles/ChatServer.dir/main.cpp.i
 
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/mian.cpp.s"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/mian.cpp -o CMakeFiles/ChatServer.dir/mian.cpp.s
+src/server/CMakeFiles/ChatServer.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/main.cpp.s"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/main.cpp -o CMakeFiles/ChatServer.dir/main.cpp.s
 
 src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
 src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o: ../src/server/tempCodeRunnerFile.cpp
@@ -191,7 +191,7 @@ src/server/CMakeFiles/ChatServer.dir/__/public/keyguard.cpp.s: cmake_force
 ChatServer_OBJECTS = \
 "CMakeFiles/ChatServer.dir/chatserver.cpp.o" \
 "CMakeFiles/ChatServer.dir/chatservice.cpp.o" \
-"CMakeFiles/ChatServer.dir/mian.cpp.o" \
+"CMakeFiles/ChatServer.dir/main.cpp.o" \
 "CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o" \
 "CMakeFiles/ChatServer.dir/db/db.cpp.o" \
 "CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o" \
@@ -205,7 +205,7 @@ ChatServer_EXTERNAL_OBJECTS =
 
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o
-../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/mian.cpp.o
+../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/main.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o

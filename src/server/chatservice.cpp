@@ -28,6 +28,7 @@ ChatService::ChatService()
     msgHandlerMap_.insert({AES_KEY_MSG, std::bind(&ChatService::clientAESkey, this, _1, _2, _3)});
     if (redis_.connect())
     {
+        redis_.beginlisten();
         redis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
     }
 }
@@ -51,7 +52,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             resp["msgid"] = LOGIN_MSG_ACK;
             resp["errno"] = 2; // 已经登录放回2的错误码
             resp["errmsg"] = "the user is online can not login again";
-            string chipertext=serverMsgEncrtpt(conn,resp);
+            string chipertext = serverMsgEncrtpt(conn, resp);
             conn->send(chipertext); // 回应用户报文
         }
         else
@@ -122,7 +123,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
                 resp["offlinemsglist"] = msglist;
                 offlineMsgOperate_.removeOfflineMsg(user.get_id()); // 删除对应的消息
             }
-            string chipertext=serverMsgEncrtpt(conn,resp);
+            string chipertext = serverMsgEncrtpt(conn, resp);
             conn->send(chipertext); // 回应用户登录报文，同时返回好友列表
         }
     }
@@ -133,11 +134,10 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
         resp["msgid"] = LOGIN_MSG_ACK;
         resp["errno"] = 1; // 表示注册失败
         resp["errmsg"] = "the id or the password is error";
-        string chipertext=serverMsgEncrtpt(conn,resp);
+        string chipertext = serverMsgEncrtpt(conn, resp);
         conn->send(chipertext); // 回应
     }
 }
-
 
 // 用户退出业务
 void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp time)
@@ -170,7 +170,7 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time)
     // 接收json对象中的数据
     string name = js["name"];
     string pwd = js["password"];
-    cout<<js.dump()<<endl;
+    cout << js.dump() << endl;
     // 根据数据创建对象
     User user;
     user.set_name(name);
@@ -182,16 +182,16 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time)
         json resp;
         resp["msgid"] = REG_MSG_ACK;
         resp["userid"] = user.get_id();
-        resp["errno"] = 0;       // 错误码等于零时表示没有错误
-        string chipertext=serverMsgEncrtpt(conn,resp);
+        resp["errno"] = 0; // 错误码等于零时表示没有错误
+        string chipertext = serverMsgEncrtpt(conn, resp);
         conn->send(chipertext); // 回应用户注册报文
     }
     else
     {
         json resp;
         resp["msgid"] = REG_MSG_ACK;
-        resp["errno"] = 1;       // 表示注册失败
-        string chipertext=serverMsgEncrtpt(conn,resp);
+        resp["errno"] = 1; // 表示注册失败
+        string chipertext = serverMsgEncrtpt(conn, resp);
         conn->send(chipertext); // 回应
     }
 }
@@ -234,8 +234,8 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
     user.set_state("offline");
     useroperate_.update_state(user);
 
-    //删除对应的aeskey
-    KeyGuard* keyguard=KeyGuard::GetInstance();
+    // 删除对应的aeskey
+    KeyGuard *keyguard = KeyGuard::GetInstance();
     keyguard->removekey(conn);
 }
 
@@ -244,6 +244,12 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time)
 {
     // 获取收件人信息
+    static int cnt = 0;
+    if (cnt % 1000 == 0)
+    {
+        cout << ++cnt << endl;
+    }
+    ++cnt;
     int toid = js["to"];
     {
         lock_guard<mutex> lock(ConnMapMutex_);
@@ -251,7 +257,7 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
         if (it != userConnMap_.end())
         {
             // 收件人在线,直接转发信息
-            string chipertext=serverMsgEncrtpt(it->second,js);
+            string chipertext = serverMsgEncrtpt(it->second, js);
             it->second->send(chipertext);
             return;
         }
@@ -261,7 +267,25 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
     User user = useroperate_.query(toid);
     if (user.get_state() == "online")
     {
-        redis_.publish(user.get_id(), js.dump());
+        static thread_local Redis thread_redis;
+        static thread_local bool is_connected = false;
+
+        if (!is_connected)
+        {
+            if (thread_redis.connect())
+            {
+                is_connected = true;
+            }
+            else
+            {
+                LOG_ERROR << "Redis connect failed";
+                return;
+            }
+        }
+
+        // 现在这个 thread_redis 是当前线程独享的，绝对安全
+        thread_redis.publish(user.get_id(), js.dump());
+        // redis_.publish(user.get_id(), js.dump());
         return;
     }
     // 收件人不在线，将消息存储在数据库中，等下次上线时转发
@@ -301,9 +325,8 @@ void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp 
         resp["msgid"] = CREATE_GROUP_MSG_ACK;
         resp["errno"] = 0;
         resp["groupid"] = group.get_id();
-        string chipertext=serverMsgEncrtpt(conn,resp);
+        string chipertext = serverMsgEncrtpt(conn, resp);
         conn->send(chipertext);
-
     }
 }
 
@@ -318,7 +341,7 @@ void ChatService::addGroup(const TcpConnectionPtr &conn, json &js, Timestamp tim
     json resp;
     resp["msgid"] = ADD_GROUP_MSG_ACK;
     resp["errno"] = 0;
-    string chipertext=serverMsgEncrtpt(conn,resp);
+    string chipertext = serverMsgEncrtpt(conn, resp);
     conn->send(chipertext);
 }
 
@@ -339,7 +362,7 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
             if (it != userConnMap_.end())
             {
                 // 用户在线直接转发
-                string chipertext=serverMsgEncrtpt(it->second,js);
+                string chipertext = serverMsgEncrtpt(it->second, js);
                 userConnMap_[num]->send(chipertext);
             }
             else
@@ -380,8 +403,14 @@ void ChatService::clientAESkey(const TcpConnectionPtr &conn, json &js, Timestamp
 {
     string aeskey_base64 = js["aeskey"];
     KeyGuard *keyguard = KeyGuard::GetInstance();
-    string aeskey=keyguard->base64_decode(aeskey_base64);
+    string aeskey = keyguard->base64_decode(aeskey_base64);
     keyguard->addkey(conn, aeskey);
+
+    json resp;
+    resp["msgid"] = AES_KEY_MSG_ACK;
+    resp["errno"] = 0;
+    string chipertext = serverMsgEncrtpt(conn, resp);
+    conn->send(chipertext);
 }
 
 string ChatService::serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js)
@@ -390,6 +419,6 @@ string ChatService::serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js)
     string aeskey;
     string text;
     keyguard->findAESkey(conn, aeskey);
-    text =js.dump();
-    return keyguard->MsgAESEncrypt(aeskey,text);
+    text = js.dump();
+    return keyguard->MsgAESEncrypt(aeskey, text);
 }

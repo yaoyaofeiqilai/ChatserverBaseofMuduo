@@ -199,11 +199,13 @@ void KeyGuard::setPublickey(string publickey)
 }
 void KeyGuard::addkey(const TcpConnectionPtr &conn, string aeskey)
 {
+    lock_guard<mutex> lock(ConntoAESkeyMapMutex_);
     ConntoAESkeyMap_[conn] = aeskey;
 }
 
 void KeyGuard::removekey(const TcpConnectionPtr &conn)
 {
+    lock_guard<mutex> lock(ConntoAESkeyMapMutex_);
     if (ConntoAESkeyMap_.find(conn) != ConntoAESkeyMap_.end())
     {
         ConntoAESkeyMap_.erase(conn);
@@ -213,11 +215,13 @@ void KeyGuard::removekey(const TcpConnectionPtr &conn)
 
 void KeyGuard::updatekey(const TcpConnectionPtr &conn, string newaeskey)
 {
+    lock_guard<mutex> lock(ConntoAESkeyMapMutex_);
     ConntoAESkeyMap_[conn] = newaeskey;
 }
 
 bool KeyGuard::findAESkey(const TcpConnectionPtr &conn, string &aeskey)
 {
+    lock_guard<mutex> lock(ConntoAESkeyMapMutex_);
     if (ConntoAESkeyMap_.find(conn) != ConntoAESkeyMap_.end())
     {
         aeskey = ConntoAESkeyMap_[conn];

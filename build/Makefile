@@ -124,6 +124,19 @@ ChatServer/fast:
 .PHONY : ChatServer/fast
 
 #=============================================================================
+# Target rules for targets named StressTest
+
+# Build rule for target.
+StressTest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 StressTest
+.PHONY : StressTest
+
+# fast build rule for target.
+StressTest/fast:
+	$(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/build
+.PHONY : StressTest/fast
+
+#=============================================================================
 # Target rules for targets named ChatClient
 
 # Build rule for target.
@@ -145,6 +158,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ChatServer"
+	@echo "... StressTest"
 	@echo "... ChatClient"
 .PHONY : help
 

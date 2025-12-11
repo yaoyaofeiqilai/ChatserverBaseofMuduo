@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/yaoyao/code/ChatserverBaseofMuduo/src/public/keyguard.cpp" "/home/yaoyao/code/ChatserverBaseofMuduo/build/src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o"
   "/home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.cpp" "/home/yaoyao/code/ChatserverBaseofMuduo/build/src/client/CMakeFiles/ChatClient.dir/client.cpp.o"
-  "/home/yaoyao/code/ChatserverBaseofMuduo/src/client/mian.cpp" "/home/yaoyao/code/ChatserverBaseofMuduo/build/src/client/CMakeFiles/ChatClient.dir/mian.cpp.o"
+  "/home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp" "/home/yaoyao/code/ChatserverBaseofMuduo/build/src/client/CMakeFiles/ChatClient.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

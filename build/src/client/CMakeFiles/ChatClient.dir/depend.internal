@@ -12,11 +12,11 @@ src/client/CMakeFiles/ChatClient.dir/client.cpp.o
  ../include/server/dataoperate/user.hpp
  ../thridparty/json.hpp
  /home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.cpp
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o
  ../include/client/client.hpp
  ../include/public/keyguard.hpp
  ../include/public/public.hpp
  ../include/server/dataoperate/group.hpp
  ../include/server/dataoperate/user.hpp
  ../thridparty/json.hpp
- /home/yaoyao/code/ChatserverBaseofMuduo/src/client/mian.cpp
+ /home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp

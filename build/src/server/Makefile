@@ -314,32 +314,32 @@ db/db.cpp.s:
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/db.cpp.s
 .PHONY : db/db.cpp.s
 
-mian.o: mian.cpp.o
+main.o: main.cpp.o
 
-.PHONY : mian.o
+.PHONY : main.o
 
 # target to build an object file
-mian.cpp.o:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/mian.cpp.o
-.PHONY : mian.cpp.o
+main.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-mian.i: mian.cpp.i
+main.i: main.cpp.i
 
-.PHONY : mian.i
+.PHONY : main.i
 
 # target to preprocess a source file
-mian.cpp.i:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/mian.cpp.i
-.PHONY : mian.cpp.i
+main.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-mian.s: mian.cpp.s
+main.s: main.cpp.s
 
-.PHONY : mian.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-mian.cpp.s:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/mian.cpp.s
-.PHONY : mian.cpp.s
+main.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/main.cpp.s
+.PHONY : main.cpp.s
 
 redis/redis.o: redis/redis.cpp.o
 
@@ -425,9 +425,9 @@ help:
 	@echo "... db/db.o"
 	@echo "... db/db.i"
 	@echo "... db/db.s"
-	@echo "... mian.o"
-	@echo "... mian.i"
-	@echo "... mian.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 	@echo "... redis/redis.o"
 	@echo "... redis/redis.i"
 	@echo "... redis/redis.s"

@@ -111,6 +111,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+src/client/CMakeFiles/StressTest.dir/rule:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f CMakeFiles/Makefile2 src/client/CMakeFiles/StressTest.dir/rule
+.PHONY : src/client/CMakeFiles/StressTest.dir/rule
+
+# Convenience name for target.
+StressTest: src/client/CMakeFiles/StressTest.dir/rule
+
+.PHONY : StressTest
+
+# fast build rule for target.
+StressTest/fast:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/build
+.PHONY : StressTest/fast
+
+# Convenience name for target.
 src/client/CMakeFiles/ChatClient.dir/rule:
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f CMakeFiles/Makefile2 src/client/CMakeFiles/ChatClient.dir/rule
 .PHONY : src/client/CMakeFiles/ChatClient.dir/rule
@@ -131,6 +146,7 @@ __/public/keyguard.o: __/public/keyguard.cpp.o
 
 # target to build an object file
 __/public/keyguard.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/__/public/keyguard.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o
 .PHONY : __/public/keyguard.cpp.o
 
@@ -140,6 +156,7 @@ __/public/keyguard.i: __/public/keyguard.cpp.i
 
 # target to preprocess a source file
 __/public/keyguard.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/__/public/keyguard.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.i
 .PHONY : __/public/keyguard.cpp.i
 
@@ -149,6 +166,7 @@ __/public/keyguard.s: __/public/keyguard.cpp.s
 
 # target to generate assembly for a file
 __/public/keyguard.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/__/public/keyguard.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.s
 .PHONY : __/public/keyguard.cpp.s
 
@@ -158,6 +176,7 @@ client.o: client.cpp.o
 
 # target to build an object file
 client.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/client.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/client.cpp.o
 .PHONY : client.cpp.o
 
@@ -167,6 +186,7 @@ client.i: client.cpp.i
 
 # target to preprocess a source file
 client.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/client.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/client.cpp.i
 .PHONY : client.cpp.i
 
@@ -176,35 +196,63 @@ client.s: client.cpp.s
 
 # target to generate assembly for a file
 client.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/client.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/client.cpp.s
 .PHONY : client.cpp.s
 
-mian.o: mian.cpp.o
+main.o: main.cpp.o
 
-.PHONY : mian.o
+.PHONY : main.o
 
 # target to build an object file
-mian.cpp.o:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/mian.cpp.o
-.PHONY : mian.cpp.o
+main.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-mian.i: mian.cpp.i
+main.i: main.cpp.i
 
-.PHONY : mian.i
+.PHONY : main.i
 
 # target to preprocess a source file
-mian.cpp.i:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/mian.cpp.i
-.PHONY : mian.cpp.i
+main.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-mian.s: mian.cpp.s
+main.s: main.cpp.s
 
-.PHONY : mian.s
+.PHONY : main.s
 
 # target to generate assembly for a file
-mian.cpp.s:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/mian.cpp.s
-.PHONY : mian.cpp.s
+main.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/ChatClient.dir/build.make src/client/CMakeFiles/ChatClient.dir/main.cpp.s
+.PHONY : main.cpp.s
+
+stresstest.o: stresstest.cpp.o
+
+.PHONY : stresstest.o
+
+# target to build an object file
+stresstest.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/stresstest.cpp.o
+.PHONY : stresstest.cpp.o
+
+stresstest.i: stresstest.cpp.i
+
+.PHONY : stresstest.i
+
+# target to preprocess a source file
+stresstest.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/stresstest.cpp.i
+.PHONY : stresstest.cpp.i
+
+stresstest.s: stresstest.cpp.s
+
+.PHONY : stresstest.s
+
+# target to generate assembly for a file
+stresstest.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/client/CMakeFiles/StressTest.dir/build.make src/client/CMakeFiles/StressTest.dir/stresstest.cpp.s
+.PHONY : stresstest.cpp.s
 
 # Help Target
 help:
@@ -214,6 +262,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... StressTest"
 	@echo "... ChatClient"
 	@echo "... __/public/keyguard.o"
 	@echo "... __/public/keyguard.i"
@@ -221,9 +270,12 @@ help:
 	@echo "... client.o"
 	@echo "... client.i"
 	@echo "... client.s"
-	@echo "... mian.o"
-	@echo "... mian.i"
-	@echo "... mian.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
+	@echo "... stresstest.o"
+	@echo "... stresstest.i"
+	@echo "... stresstest.s"
 .PHONY : help
 
 

@@ -70,18 +70,18 @@ src/client/CMakeFiles/ChatClient.dir/client.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatClient.dir/client.cpp.s"
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.cpp -o CMakeFiles/ChatClient.dir/client.cpp.s
 
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: src/client/CMakeFiles/ChatClient.dir/flags.make
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.o: ../src/client/mian.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/client/CMakeFiles/ChatClient.dir/mian.cpp.o"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatClient.dir/mian.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/client/mian.cpp
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: src/client/CMakeFiles/ChatClient.dir/flags.make
+src/client/CMakeFiles/ChatClient.dir/main.cpp.o: ../src/client/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object src/client/CMakeFiles/ChatClient.dir/main.cpp.o"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatClient.dir/main.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp
 
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatClient.dir/mian.cpp.i"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/client/mian.cpp > CMakeFiles/ChatClient.dir/mian.cpp.i
+src/client/CMakeFiles/ChatClient.dir/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatClient.dir/main.cpp.i"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp > CMakeFiles/ChatClient.dir/main.cpp.i
 
-src/client/CMakeFiles/ChatClient.dir/mian.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatClient.dir/mian.cpp.s"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/client/mian.cpp -o CMakeFiles/ChatClient.dir/mian.cpp.s
+src/client/CMakeFiles/ChatClient.dir/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatClient.dir/main.cpp.s"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/client && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp -o CMakeFiles/ChatClient.dir/main.cpp.s
 
 src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o: src/client/CMakeFiles/ChatClient.dir/flags.make
 src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o: ../src/public/keyguard.cpp
@@ -99,14 +99,14 @@ src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.s: cmake_force
 # Object files for target ChatClient
 ChatClient_OBJECTS = \
 "CMakeFiles/ChatClient.dir/client.cpp.o" \
-"CMakeFiles/ChatClient.dir/mian.cpp.o" \
+"CMakeFiles/ChatClient.dir/main.cpp.o" \
 "CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o"
 
 # External object files for target ChatClient
 ChatClient_EXTERNAL_OBJECTS =
 
 ../bin/ChatClient: src/client/CMakeFiles/ChatClient.dir/client.cpp.o
-../bin/ChatClient: src/client/CMakeFiles/ChatClient.dir/mian.cpp.o
+../bin/ChatClient: src/client/CMakeFiles/ChatClient.dir/main.cpp.o
 ../bin/ChatClient: src/client/CMakeFiles/ChatClient.dir/__/public/keyguard.cpp.o
 ../bin/ChatClient: src/client/CMakeFiles/ChatClient.dir/build.make
 ../bin/ChatClient: /usr/lib/x86_64-linux-gnu/libssl.so

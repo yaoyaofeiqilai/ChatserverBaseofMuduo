@@ -48,17 +48,17 @@ src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../src/serve
 src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: ../include/server/db/db.hpp
 src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: ../src/server/db/db.cpp
 
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/public/keyguard.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/chatserver.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/chatservice.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/dataoperate/group.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/dataoperate/groupoperate.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/dataoperate/user.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/dataoperate/useroperate.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../include/server/redis/redis.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../thridparty/json.hpp
-src/server/CMakeFiles/ChatServer.dir/mian.cpp.o: ../src/server/mian.cpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/public/keyguard.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/chatserver.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/chatservice.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/group.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/groupoperate.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/user.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/useroperate.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/redis/redis.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../thridparty/json.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../src/server/main.cpp
 
 src/server/CMakeFiles/ChatServer.dir/redis/redis.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/ChatServer.dir/redis/redis.cpp.o: ../src/server/redis/redis.cpp
