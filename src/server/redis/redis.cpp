@@ -45,6 +45,7 @@ bool Redis::connect()
 // 向redis指定的通道channel发布消息
 bool Redis::publish(int channel, string message)
 {
+    lock_guard<mutex> lock(publish_mutex_);
     redisReply *reply = (redisReply *)redisCommand(publish_context_, "PUBLISH %d %s", channel, message.c_str());
     if (nullptr == reply)
     {
@@ -58,6 +59,7 @@ bool Redis::publish(int channel, string message)
 // 向redis指定的通道subscribe订阅消息
 bool Redis::subscribe(int channel)
 {
+    lock_guard<mutex> lock(this->subscribe_mutex_);
     // SUBSCRIBE命令本身会造成线程阻塞等待通道里面发生消息，这里只做订阅通道，不接收通道消息
     // 通道消息的接收专门在observer_channel_message函数中的独立线程中进行
     // 只负责发送命令，不阻塞接收redis server响应消息，否则和notifyMsg线程抢占响应资源
@@ -84,6 +86,7 @@ bool Redis::subscribe(int channel)
 // 向redis指定的通道unsubscribe取消订阅消息
 bool Redis::unsubscribe(int channel)
 {
+    lock_guard<mutex> lock(this->subscribe_mutex_);
     if (REDIS_ERR == redisAppendCommand(this->subscribe_context_, "UNSUBSCRIBE %d", channel))
     {
         cerr << "unsubscribe command failed!" << endl;

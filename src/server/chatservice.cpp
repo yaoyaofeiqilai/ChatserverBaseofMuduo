@@ -26,6 +26,7 @@ ChatService::ChatService()
     msgHandlerMap_.insert({GROUP_CHAT_MSG, std::bind(&ChatService::groupChat, this, _1, _2, _3)});
     msgHandlerMap_.insert({LOGINOUT_MSG, std::bind(&ChatService::userLoginout, this, _1, _2, _3)});
     msgHandlerMap_.insert({AES_KEY_MSG, std::bind(&ChatService::clientAESkey, this, _1, _2, _3)});
+    useroperate_.resetUserState();
     if (redis_.connect())
     {
         redis_.beginlisten();
@@ -62,7 +63,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             // 更新数据库中用户的状态
             useroperate_.update_state(user);
             // 订阅相应的通道
-            redis_.subscribe(user.get_id());
+            //redis_.subscribe(user.get_id());
 
             // 将用户连接添加到连接表中
             {
@@ -155,7 +156,7 @@ void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp
     }
 
     // 取消订阅通道
-    redis_.unsubscribe(userid);
+    //redis_.unsubscribe(userid);
 
     // 修改状态
     User user;
@@ -228,7 +229,7 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
     }
 
     // 取消订阅channel
-    redis_.unsubscribe(user.get_id());
+    //redis_.unsubscribe(user.get_id());
 
     // 更新用户状态
     user.set_state("offline");

@@ -201,6 +201,7 @@ void KeyGuard::addkey(const TcpConnectionPtr &conn, string aeskey)
 {
     lock_guard<mutex> lock(ConntoAESkeyMapMutex_);
     ConntoAESkeyMap_[conn] = aeskey;
+    cout<<"Map的大小"<<ConntoAESkeyMap_.size()<<endl;
 }
 
 void KeyGuard::removekey(const TcpConnectionPtr &conn)

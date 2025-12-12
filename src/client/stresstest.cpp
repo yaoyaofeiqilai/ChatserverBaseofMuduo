@@ -37,6 +37,13 @@ void func(int seq)
     string publickey;
     string buffer(1024, '0');
     int len = recv(clientfd, &buffer[0], 1000, 0);
+    if (len <= 0)
+    {
+        // 服务器关闭或出错，直接退出当前用户线程，不要抛异常
+        // cerr << "用户" << seq << "连接已断开" << endl;
+        close(clientfd);
+        return;
+    }
     buffer.resize(len);
     json jsone = json::parse(buffer);
     publickey = jsone["publickey"].get<string>();
@@ -55,12 +62,13 @@ void func(int seq)
     {
         cerr << "send aes key error" << endl;
     }
-    if (recv(clientfd, &buffer[0], 1024, 0) != -1) // 接收aeskeyack
+    len = recv(clientfd, &buffer[0], 1024, 0);
+    if (len <= 0) // 接收aeskeyack
     {
-        //if(seq%100==0)cout << seq<<"密钥交换成功" << endl;
-    }
-    else{
-        cout<<"出现错误1"<<endl;
+        close(clientfd);
+        cout << "接收异常" << endl;
+        return;
+        // if(seq%100==0)cout << seq<<"密钥交换成功" << endl;
     }
 
     // 登录字符串
@@ -92,7 +100,8 @@ void func(int seq)
     js = json::parse(buffer);
     if (js["msgid"].get<int>() == LOGIN_MSG_ACK && js["errno"].get<int>() == 0)
     {
-        if(seq%10==0)cout << "用户" << seq << "登录成功!" << endl;
+        if (seq % 10 == 0)
+            cout << "用户" << seq << "登录成功!" << endl;
     }
 
     // 设置fd为非阻塞
@@ -116,13 +125,13 @@ void func(int seq)
         string chattext = chatjs.dump();
         chattext = keyguard->MsgAESEncrypt(aeskey, chattext);
         len = send(clientfd, chattext.c_str(), chattext.size(), 0);
-        if(seq==0)
+        if (seq == 0)
         {
-            cout<<"当前时间："<<getCurrentTime()<<endl;
+            cout << "当前时间：" << getCurrentTime() << endl;
         }
-        if(len==-1)
+        if (len == -1)
         {
-            cerr<<"用户"<<seq<<"发送消息失败!"<<endl;
+            cerr << "用户" << seq << "发送消息失败!" << endl;
         }
         // 接收信息
         buffer.resize(1024);
@@ -142,8 +151,9 @@ void func(int seq)
             //     cout << "用户" << seq << "收到来自用户" << js["from"] << "的消息:" << js["msg"].get<string>() << endl;
             // }
         }
-        else{
-            cout<<"出现错误！！！用户"<<seq<<"已退出"<<endl;
+        else
+        {
+            cout << "出现错误！！！用户" << seq << "已退出" << endl;
             break;
         }
         this_thread::sleep_for(chrono::seconds(1));
@@ -158,6 +168,8 @@ int main()
         thrs.emplace_back(func, i);
         this_thread::sleep_for(chrono::milliseconds(10));
     }
+    cout<<"所有用户线程创建完毕!" << endl;
+    
     for (auto &thr : thrs)
     {
         thr.join();

@@ -4,6 +4,7 @@
 #include <hiredis/hiredis.h>
 #include <thread>
 #include <functional>
+#include <mutex>
 using namespace std;
 
 class Redis
@@ -32,6 +33,8 @@ public:
 
     void beginlisten();
 
+
+
 private:
     // rediscontext可以理解为相当于一个客户端窗口
     // 负责发布消息的context
@@ -43,6 +46,9 @@ private:
 
     // 回调函数,收到订阅消息时回调
     function<void(int, string)> notify_message_handler_;
+
+    mutex subscribe_mutex_;
+    mutex publish_mutex_;
 };
 
 #endif
