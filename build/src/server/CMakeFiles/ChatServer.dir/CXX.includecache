@@ -61,6 +61,8 @@ thread
 -
 mutex
 -
+atomic
+-
 offlinemsgoperate.hpp
 ../include/server/offlinemsgoperate.hpp
 groupoperate.hpp
@@ -454,5 +456,7 @@ muduo/base/Logging.h
 db.hpp
 -
 iostream
+-
+thread
 -
 

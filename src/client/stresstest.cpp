@@ -2,12 +2,13 @@
 #include "keyguard.hpp"
 #include <fcntl.h>
 #include <ctime>
+#include <sys/resource.h>
 atomic_bool userIsLogin;
 sem_t acksem;
 void func(int seq)
 {
     string ip = "127.0.0.1";
-    uint16_t port = atoi("8000");
+    uint16_t port = atoi("6000");
     // 创建客户端网络嵌套字scoket
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (clientfd == -1)
@@ -16,6 +17,17 @@ void func(int seq)
         exit(-1);
     }
 
+    int opt = 1;
+    if (setsockopt(clientfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    {
+        cerr << "setsockopt SO_REUSEADDR failed!" << endl;
+        close(clientfd);
+        exit(-1);
+    }
+
+    // 设置SO_LINGER为0，避免TIME_WAIT
+    struct linger ling = {1, 0}; // 启用，超时0
+    setsockopt(clientfd, SOL_SOCKET, SO_LINGER, &ling, sizeof(ling));
     // 填写客户端连接的服务器信息
     sockaddr_in server;
     memset(&server, 0, sizeof(sockaddr_in));
@@ -29,7 +41,7 @@ void func(int seq)
     {
         cerr << "connect server failed!" << endl;
         close(clientfd);
-        exit(-1);
+        return;
     }
 
     // 密钥处理
@@ -57,8 +69,10 @@ void func(int seq)
     aesjs["aeskey"] = aeskey_base64;
     string text = aesjs.dump();
     string cipherText = keyguard->RsaEncrypt(publickey, text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     len = send(clientfd, cipherText.c_str(), cipherText.size(), 0);
-    if (len == -1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send aes key error" << endl;
     }
@@ -80,8 +94,10 @@ void func(int seq)
     string logintext = js.dump();
     logintext = keyguard->MsgAESEncrypt(aeskey, logintext);
     // 发送
+    sendLen = htonl(logintext.size());        // 转为网络字节序
+    lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     len = send(clientfd, logintext.c_str(), logintext.size(), 0);
-    if (len == -1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send login error" << endl;
     }
@@ -103,6 +119,12 @@ void func(int seq)
         if (seq % 10 == 0)
             cout << "用户" << seq << "登录成功!" << endl;
     }
+    else
+    {
+        cout << js["errmsg"].get<string>() << endl;
+        close(clientfd);
+        return;
+    }
 
     // 设置fd为非阻塞
     int flag = fcntl(clientfd, F_GETFL, 0);
@@ -115,7 +137,7 @@ void func(int seq)
         // 随机向一名用户发送信息
         json chatjs;
         chatjs["msgid"] = ONE_CHAT_MSG;
-        int toid = rand() % 1000 + 10000;
+        int toid = rand() % 20000 + 10000;
         chatjs["to"] = toid;
         chatjs["from"] = seq + 10000;
         chatjs["name"] = "testuser" + to_string(seq);
@@ -124,12 +146,10 @@ void func(int seq)
 
         string chattext = chatjs.dump();
         chattext = keyguard->MsgAESEncrypt(aeskey, chattext);
+        sendLen = htonl(chattext.size());         // 转为网络字节序
+        lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
         len = send(clientfd, chattext.c_str(), chattext.size(), 0);
-        if (seq == 0)
-        {
-            cout << "当前时间：" << getCurrentTime() << endl;
-        }
-        if (len == -1)
+        if (len == -1 || lenHead == -1)
         {
             cerr << "用户" << seq << "发送消息失败!" << endl;
         }
@@ -161,14 +181,38 @@ void func(int seq)
 }
 int main()
 {
+    int start;
+    cin >> start;
+    struct rlimit rl;
+    getrlimit(RLIMIT_NOFILE, &rl);
+    rl.rlim_cur = 100000;
+    rl.rlim_max = 100000;
+    setrlimit(RLIMIT_NOFILE, &rl);
+
+    // 提高进程/线程数限制
+    rl.rlim_cur = 100000;
+    rl.rlim_max = 100000;
+    setrlimit(RLIMIT_NPROC, &rl);
+    this_thread::sleep_for(chrono::seconds(1));
     vector<thread> thrs;
-    const int usercount = 1000;
-    for (int i = 0; i < usercount; ++i)
+
+    const int usercount = 5000;
+    for (int i = start; i <= usercount + start; ++i)
     {
         thrs.emplace_back(func, i);
         this_thread::sleep_for(chrono::milliseconds(10));
     }
-    cout<<"所有用户线程创建完毕!" << endl;
+    cout << "所有用户线程创建完毕!" << endl;
+
+    thread t([&]()
+             {
+        while(true)
+        {
+            cout<<getCurrentTime()<<endl;
+            this_thread::sleep_for(chrono::seconds(1));
+        } });
+    t.detach();
+
     
     for (auto &thr : thrs)
     {

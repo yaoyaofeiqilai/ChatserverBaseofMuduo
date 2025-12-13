@@ -3,7 +3,7 @@
 #include <muduo/base/Logging.h>
 #include <db.hpp>
 #include <iostream>
-
+#include <thread>
 using namespace std::placeholders;
 using namespace muduo;
 
@@ -27,11 +27,14 @@ ChatService::ChatService()
     msgHandlerMap_.insert({LOGINOUT_MSG, std::bind(&ChatService::userLoginout, this, _1, _2, _3)});
     msgHandlerMap_.insert({AES_KEY_MSG, std::bind(&ChatService::clientAESkey, this, _1, _2, _3)});
     useroperate_.resetUserState();
-    if (redis_.connect())
-    {
-        redis_.beginlisten();
-        redis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
-    }
+    totalMsgCount_ = 0;
+    thread thread_performance(&ChatService::performanceTest, this);
+    thread_performance.detach(); 
+    // if (redis_.connect())
+    // {
+    //     redis_.beginlisten();
+    //     redis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
+    // }
 }
 
 // 登录信息的处理方法
@@ -63,7 +66,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             // 更新数据库中用户的状态
             useroperate_.update_state(user);
             // 订阅相应的通道
-            //redis_.subscribe(user.get_id());
+            // redis_.subscribe(user.get_id());
 
             // 将用户连接添加到连接表中
             {
@@ -156,7 +159,7 @@ void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp
     }
 
     // 取消订阅通道
-    //redis_.unsubscribe(userid);
+    // redis_.unsubscribe(userid);
 
     // 修改状态
     User user;
@@ -220,16 +223,18 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
         lock_guard<mutex> lock(ConnMapMutex_);
         for (auto it = userConnMap_.begin(); it != userConnMap_.end(); it++)
         {
+
             if (it->second == conn)
             {
                 user.set_id(it->first);
+                userConnMap_.erase(it);
                 break;
             }
         }
     }
 
     // 取消订阅channel
-    //redis_.unsubscribe(user.get_id());
+    // redis_.unsubscribe(user.get_id());
 
     // 更新用户状态
     user.set_state("offline");
@@ -244,13 +249,7 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
 //{"msgid":5,"from":1,"name":zhangsan,"to":2,"msg":"h1111111a"}
 void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time)
 {
-    // 获取收件人信息
-    static int cnt = 0;
-    if (cnt % 1000 == 0)
-    {
-        cout << ++cnt << endl;
-    }
-    ++cnt;
+    totalMsgCount_++;
     int toid = js["to"];
     {
         lock_guard<mutex> lock(ConnMapMutex_);
@@ -264,33 +263,33 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
         }
     }
 
-    // 查询是否在其他服务器上
-    User user = useroperate_.query(toid);
-    if (user.get_state() == "online")
-    {
-        static thread_local Redis thread_redis;
-        static thread_local bool is_connected = false;
+    // // 查询是否在其他服务器上
+    // User user = useroperate_.query(toid);
+    // if (user.get_state() == "online")
+    // {
+    //     static thread_local Redis thread_redis;
+    //     static thread_local bool is_connected = false;
 
-        if (!is_connected)
-        {
-            if (thread_redis.connect())
-            {
-                is_connected = true;
-            }
-            else
-            {
-                LOG_ERROR << "Redis connect failed";
-                return;
-            }
-        }
+    //     if (!is_connected)
+    //     {
+    //         if (thread_redis.connect())
+    //         {
+    //             is_connected = true;
+    //         }
+    //         else
+    //         {
+    //             LOG_ERROR << "Redis connect failed";
+    //             return;
+    //         }
+    //     }
 
-        // 现在这个 thread_redis 是当前线程独享的，绝对安全
-        thread_redis.publish(user.get_id(), js.dump());
-        // redis_.publish(user.get_id(), js.dump());
-        return;
-    }
-    // 收件人不在线，将消息存储在数据库中，等下次上线时转发
-    offlineMsgOperate_.insertOfflineMsg(toid, js.dump());
+    //     // 现在这个 thread_redis 是当前线程独享的，绝对安全
+    //     // thread_redis.publish(user.get_id(), js.dump());
+    //     // redis_.publish(user.get_id(), js.dump());
+    //     return;
+    // }
+    // // 收件人不在线，将消息存储在数据库中，等下次上线时转发
+    // offlineMsgOperate_.insertOfflineMsg(toid, js.dump());
 }
 
 // 服务器断开时重置用户状态,静态
@@ -373,7 +372,7 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
                 if (user.get_state() == "online")
                 {
                     // 发布到redis中
-                    redis_.publish(num, js.dump());
+                    // redis_.publish(num, js.dump());
                 }
                 else
                 { // 存入离线消息列表
@@ -422,4 +421,18 @@ string ChatService::serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js)
     keyguard->findAESkey(conn, aeskey);
     text = js.dump();
     return keyguard->MsgAESEncrypt(aeskey, text);
+}
+
+void ChatService::performanceTest()
+{
+    cout<<"-----性能检测线程启动-----"<<endl;
+    KeyGuard* ptr= KeyGuard::GetInstance();
+    while (true)
+    {
+        cout<<"当前登录用户数："<< ptr->showMapSize() << endl;
+        int last = totalMsgCount_.load();
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        cout << "当前总共处理信息数：" << totalMsgCount_.load() << endl;
+        cout<<"每秒处理信息数：" << (totalMsgCount_ - last)/5 << endl;     
+    }
 }

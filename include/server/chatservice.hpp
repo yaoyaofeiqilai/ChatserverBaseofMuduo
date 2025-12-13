@@ -12,6 +12,7 @@
 #include "useroperate.hpp"
 #include<thread>
 #include<mutex>
+#include <atomic>
 #include"offlinemsgoperate.hpp"
 #include "groupoperate.hpp"
 #include "redis.hpp"
@@ -68,6 +69,9 @@ class ChatService
     void clientAESkey(const TcpConnectionPtr &conn, json &js, Timestamp time);
 
     string serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js);
+
+    //启动性能检测函数
+    void performanceTest();
     private :
     //构造函数
     ChatService();
@@ -88,8 +92,14 @@ class ChatService
     //群组相关的业务处理方法
     GroupOperata groupOperata_;
 
+    
+
+
     //redis操作对象
     Redis redis_;
+
+    //总共发送到信息数
+    atomic<int> totalMsgCount_;
 };
 
 #endif

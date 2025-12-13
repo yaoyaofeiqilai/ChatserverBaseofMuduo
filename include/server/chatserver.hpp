@@ -3,6 +3,8 @@
 #define CHATSERVER_HPP
 #include <muduo/net/TcpServer.h>
 #include <muduo/net/EventLoop.h>
+#include "muduo/base/Logging.h"
+#include <atomic>
 using namespace muduo;
 using namespace muduo::net;
 
@@ -18,9 +20,7 @@ class ChatServer
     void ServerMessFunc(const TcpConnectionPtr&,Buffer*,Timestamp);
     TcpServer server_;
     EventLoop* loop_;      //相当于epoll
+
+    std::atomic<int> totalconnectedCount_;
 };
-
-
-
-
 #endif

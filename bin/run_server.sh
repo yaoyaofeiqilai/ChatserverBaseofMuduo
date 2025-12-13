@@ -15,7 +15,8 @@ ulimit -a | grep -E "open files|max user processes|stack size"
 echo "---------------------------------"
 echo "正在啟動服务器."
 echo "---------------------------------"
-
+sysctl -w net.ipv4.ip_local_port_range="1024 65535"
+sysctl -w net.ipv4.tcp_tw_reuse=1
 # 啟動你的客戶端 (請確保路徑正確)
 ./ChatServer 127.0.0.1 6000
 

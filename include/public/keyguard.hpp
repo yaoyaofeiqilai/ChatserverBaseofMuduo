@@ -67,6 +67,9 @@ public:
     //base64编码
     string base64_decode(const std::string& encoded_string);
     string base64_encode(const std::string& raw_data);
+
+    //Map大小
+    int showMapSize();
 };
 
 #endif // KEYGUARD_HPP

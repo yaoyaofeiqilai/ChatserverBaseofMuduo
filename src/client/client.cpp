@@ -64,6 +64,8 @@ void login(int &clientfd)
 
     // 加密
     request = msgEncryption(request);
+    uint32_t sendLen = htonl(request.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, request.c_str(), request.size(), 0);
     if (len == -1)
     {
@@ -324,6 +326,8 @@ void chat(int clientfd, string str)
     // 发送数据
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
@@ -486,8 +490,10 @@ void keyHandler(int &clientfd, json &js)
     aesjs["aeskey"] = aeskey;
     string text = aesjs.dump();
     string cipherText = keyguard->RsaEncrypt(publickey, text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.size(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send aes key error" << endl;
     }
