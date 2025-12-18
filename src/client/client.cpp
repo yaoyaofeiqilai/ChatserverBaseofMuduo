@@ -329,7 +329,7 @@ void chat(int clientfd, string str)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -351,6 +351,8 @@ void addfriend(int clientfd, string str)
     js["msgid"] = ADD_FRIEND_MSG;
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
     if (len == -1)
     {
@@ -375,8 +377,10 @@ void creategroup(int clientfd, string str)
 
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -392,8 +396,10 @@ void addgroup(int clientfd, string str)
     // 加密发送数据
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -417,8 +423,10 @@ void groupchat(int clientfd, string str)
 
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -434,8 +442,10 @@ void loginout(int clientfd, string)
     // 发送数据
     string text = js.dump();
     string cipherText = msgEncryption(text);
+    uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1)
+    if (len == -1||lenHead==-1)
     {
         cerr << "send massage failed" << endl;
     }

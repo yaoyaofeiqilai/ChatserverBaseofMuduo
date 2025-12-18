@@ -287,32 +287,32 @@ dataoperate/useroperate.cpp.s:
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.s
 .PHONY : dataoperate/useroperate.cpp.s
 
-db/db.o: db/db.cpp.o
+db/mysqlconnection.o: db/mysqlconnection.cpp.o
 
-.PHONY : db/db.o
+.PHONY : db/mysqlconnection.o
 
 # target to build an object file
-db/db.cpp.o:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o
-.PHONY : db/db.cpp.o
+db/mysqlconnection.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o
+.PHONY : db/mysqlconnection.cpp.o
 
-db/db.i: db/db.cpp.i
+db/mysqlconnection.i: db/mysqlconnection.cpp.i
 
-.PHONY : db/db.i
+.PHONY : db/mysqlconnection.i
 
 # target to preprocess a source file
-db/db.cpp.i:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/db.cpp.i
-.PHONY : db/db.cpp.i
+db/mysqlconnection.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.i
+.PHONY : db/mysqlconnection.cpp.i
 
-db/db.s: db/db.cpp.s
+db/mysqlconnection.s: db/mysqlconnection.cpp.s
 
-.PHONY : db/db.s
+.PHONY : db/mysqlconnection.s
 
 # target to generate assembly for a file
-db/db.cpp.s:
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/db.cpp.s
-.PHONY : db/db.cpp.s
+db/mysqlconnection.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.s
+.PHONY : db/mysqlconnection.cpp.s
 
 main.o: main.cpp.o
 
@@ -422,9 +422,9 @@ help:
 	@echo "... dataoperate/useroperate.o"
 	@echo "... dataoperate/useroperate.i"
 	@echo "... dataoperate/useroperate.s"
-	@echo "... db/db.o"
-	@echo "... db/db.i"
-	@echo "... db/db.s"
+	@echo "... db/mysqlconnection.o"
+	@echo "... db/mysqlconnection.i"
+	@echo "... db/mysqlconnection.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

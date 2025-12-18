@@ -109,18 +109,18 @@ src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.s"
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/tempCodeRunnerFile.cpp -o CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.s
 
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: ../src/server/db/db.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatServer.dir/db/db.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/db.cpp
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o: ../src/server/db/mysqlconnection.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/yaoyao/code/ChatserverBaseofMuduo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o -c /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/mysqlconnection.cpp
 
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatServer.dir/db/db.cpp.i"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/db.cpp > CMakeFiles/ChatServer.dir/db/db.cpp.i
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.i"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/mysqlconnection.cpp > CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.i
 
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/db/db.cpp.s"
-	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/db.cpp -o CMakeFiles/ChatServer.dir/db/db.cpp.s
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.s"
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build/src/server && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/yaoyao/code/ChatserverBaseofMuduo/src/server/db/mysqlconnection.cpp -o CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.s
 
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: src/server/CMakeFiles/ChatServer.dir/flags.make
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../src/server/dataoperate/groupoperate.cpp
@@ -193,7 +193,7 @@ ChatServer_OBJECTS = \
 "CMakeFiles/ChatServer.dir/chatservice.cpp.o" \
 "CMakeFiles/ChatServer.dir/main.cpp.o" \
 "CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o" \
-"CMakeFiles/ChatServer.dir/db/db.cpp.o" \
+"CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o" \
 "CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o" \
 "CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o" \
 "CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o" \
@@ -207,7 +207,7 @@ ChatServer_EXTERNAL_OBJECTS =
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/main.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.o
-../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o
+../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o
 ../bin/ChatServer: src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o

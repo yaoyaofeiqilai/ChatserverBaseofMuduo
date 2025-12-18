@@ -141,7 +141,7 @@ void func(int seq)
         chatjs["to"] = toid;
         chatjs["from"] = seq + 10000;
         chatjs["name"] = "testuser" + to_string(seq);
-        chatjs["msg"] = "你好,这是用户test" + to_string(seq) + "的消息";
+        chatjs["msg"] = "hello,this is the test" + to_string(seq) + "s message";
         chatjs["time"] = getCurrentTime();
 
         string chattext = chatjs.dump();
@@ -197,7 +197,7 @@ int main()
     vector<thread> thrs;
 
     const int usercount = 5000;
-    for (int i = start; i <= usercount + start; ++i)
+    for (int i = start; i < usercount + start; ++i)
     {
         thrs.emplace_back(func, i);
         this_thread::sleep_for(chrono::milliseconds(10));

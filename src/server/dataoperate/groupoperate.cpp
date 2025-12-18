@@ -1,19 +1,20 @@
 #include "group.hpp"
 #include "groupoperate.hpp"
-#include "db.hpp"
-
+#include "mysqlconnection.hpp"
+#include "connectionpool.hpp"
 // 创建组
 bool GroupOperata::createGroup(Group &group)
 {
     char sql[1024];
     sprintf(sql, "insert into AllGroup(groupname,groupdesc) values('%s','%s')", group.get_name().c_str(), group.get_desc().c_str());
 
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        if (mysql.update(sql))
+        if (conn->update(sql))
         {
-            group.set_id(mysql_insert_id(mysql.get_connect()));
+            group.set_id(mysql_insert_id(conn->get_connect()));
             return true;
         }
     }
@@ -26,10 +27,11 @@ bool GroupOperata::addGroup(int userid, int groupid, string role)
     char sql[1024];
     sprintf(sql, "insert into GroupUser values(%d,%d,'%s')", groupid, userid, role.c_str());
 
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        if (mysql.update(sql))
+        if (conn->update(sql))
         {
             return true;
         }
@@ -44,10 +46,11 @@ vector<int> GroupOperata::queryNumber(int groupid, int userid)
     sprintf(sql, "select userid from GroupUser where groupid=%d and userid !=%d", groupid,userid);
     
     vector<int> idVec;
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        MYSQL_RES *res = mysql.query(sql);
+        MYSQL_RES *res = conn->query(sql);
         if (res != nullptr)
         {
             MYSQL_ROW row;
@@ -71,10 +74,11 @@ vector<Group> GroupOperata::queryGroup(int userid)
     sprintf(sql, "select a.id,a.groupname,a.groupdesc from AllGroup a inner join GroupUser b on a.id=b.groupid where b.userid=%d", userid);
 
     vector<Group> groupVec;
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        MYSQL_RES *res = mysql.query(sql);
+        MYSQL_RES *res =conn->query(sql);
         if (res != nullptr)
         {
             MYSQL_ROW row;
@@ -94,7 +98,7 @@ vector<Group> GroupOperata::queryGroup(int userid)
     for (Group &group : groupVec)
     {
         sprintf(sql, "select a.id,a.name,a.state,b.grouprole from user a inner join GroupUser b on a.id=b.userid where b.groupid=%d", group.get_id());
-        MYSQL_RES *res = mysql.query(sql);
+        MYSQL_RES *res = conn->query(sql);
         if (res != nullptr)
         {
             MYSQL_ROW row;

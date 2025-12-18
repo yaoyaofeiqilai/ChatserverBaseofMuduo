@@ -29,6 +29,10 @@ void ChatServer::start()
 {
    muduo::Logger::setLogLevel(muduo::Logger::FATAL);
    server_.start();
+
+   //初始化service
+   ChatService::instance();
+
    // 生成公私钥
    KeyGuard *keyguard = KeyGuard::GetInstance();
    keyguard->generateRSAkey();

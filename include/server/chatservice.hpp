@@ -17,6 +17,8 @@
 #include "groupoperate.hpp"
 #include "redis.hpp"
 #include "keyguard.hpp"
+#include "mysqlconnection.hpp"
+#include "connectionpool.hpp"
 using namespace muduo;
 using namespace muduo::net;
 using json=nlohmann::json;
@@ -92,7 +94,8 @@ class ChatService
     //群组相关的业务处理方法
     GroupOperata groupOperata_;
 
-    
+    //连接池指针
+    ConnectionPool<MysqlConnection>* mysqlPool_;
 
 
     //redis操作对象

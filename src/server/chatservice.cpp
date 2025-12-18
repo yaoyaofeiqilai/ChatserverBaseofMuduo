@@ -1,7 +1,6 @@
 #include "chatservice.hpp"
 #include "public.hpp"
 #include <muduo/base/Logging.h>
-#include <db.hpp>
 #include <iostream>
 #include <thread>
 using namespace std::placeholders;
@@ -32,9 +31,12 @@ ChatService::ChatService()
     thread_performance.detach(); 
     // if (redis_.connect())
     // {
-    //     redis_.beginlisten();
+    //     redis_.beginlisten()
     //     redis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
     // }
+
+    mysqlPool_ = ConnectionPool<MysqlConnection>::getInstance();
+    mysqlPool_->init_pool("127.0.0.1",3306,"root","Lsg20041013.","chat",16,1024,60,5000);
 }
 
 // 登录信息的处理方法
@@ -263,33 +265,34 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
         }
     }
 
-    // // 查询是否在其他服务器上
-    // User user = useroperate_.query(toid);
-    // if (user.get_state() == "online")
-    // {
-    //     static thread_local Redis thread_redis;
-    //     static thread_local bool is_connected = false;
+    // 查询是否在其他服务器上
+    User user = useroperate_.query(toid);
+    if (user.get_state() == "online")
+    {
+        // static thread_local Redis thread_redis;
+        // static thread_local bool is_connected = false;
 
-    //     if (!is_connected)
-    //     {
-    //         if (thread_redis.connect())
-    //         {
-    //             is_connected = true;
-    //         }
-    //         else
-    //         {
-    //             LOG_ERROR << "Redis connect failed";
-    //             return;
-    //         }
-    //     }
+        // if (!is_connected)
+        // {
+        //     if (thread_redis.connect())
+        //     {
+        //         is_connected = true;
+        //     }
+        //     else
+        //     {
+        //         LOG_ERROR << "Redis connect failed";
+        //         return;
+        //     }
+        // }
 
     //     // 现在这个 thread_redis 是当前线程独享的，绝对安全
     //     // thread_redis.publish(user.get_id(), js.dump());
     //     // redis_.publish(user.get_id(), js.dump());
     //     return;
-    // }
+    
+    }
     // // 收件人不在线，将消息存储在数据库中，等下次上线时转发
-    // offlineMsgOperate_.insertOfflineMsg(toid, js.dump());
+    offlineMsgOperate_.insertOfflineMsg(toid, js.dump());
 }
 
 // 服务器断开时重置用户状态,静态

@@ -13,6 +13,8 @@ src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/dataope
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/dataoperate/user.hpp
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/dataoperate/useroperate.hpp
+src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../thridparty/json.hpp
 src/server/CMakeFiles/ChatServer.dir/chatserver.cpp.o: ../src/server/chatserver.cpp
@@ -25,7 +27,8 @@ src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/dataop
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/dataoperate/user.hpp
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/dataoperate/useroperate.hpp
-src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/db/db.hpp
+src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../thridparty/json.hpp
 src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../src/server/chatservice.cpp
@@ -33,20 +36,23 @@ src/server/CMakeFiles/ChatServer.dir/chatservice.cpp.o: ../src/server/chatservic
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/dataoperate/group.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/dataoperate/groupoperate.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/dataoperate/user.hpp
-src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/db/db.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o: ../src/server/dataoperate/groupoperate.cpp
 
 src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
-src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o: ../include/server/db/db.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o: ../src/server/dataoperate/offlinemsgoperate.cpp
 
 src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../include/server/dataoperate/user.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../include/server/dataoperate/useroperate.hpp
-src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../include/server/db/db.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o: ../src/server/dataoperate/useroperate.cpp
 
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: ../include/server/db/db.hpp
-src/server/CMakeFiles/ChatServer.dir/db/db.cpp.o: ../src/server/db/db.cpp
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o: ../include/server/db/mysqlconnection.hpp
+src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o: ../src/server/db/mysqlconnection.cpp
 
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/public/keyguard.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/chatserver.hpp
@@ -56,6 +62,8 @@ src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/g
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/offlinemsgoperate.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/user.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/dataoperate/useroperate.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/db/connectionpool.hpp
+src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/db/mysqlconnection.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../thridparty/json.hpp
 src/server/CMakeFiles/ChatServer.dir/main.cpp.o: ../src/server/main.cpp

@@ -1,7 +1,8 @@
 // 是对用户操作类UserOperate的实现
 #include "useroperate.hpp"
 #include <string>
-#include "db.hpp"
+#include "mysqlconnection.hpp"
+#include "connectionpool.hpp"
 #include <muduo/base/Logging.h>
 #include <thread>
 bool UserOperate::
@@ -13,16 +14,15 @@ bool UserOperate::
     sprintf(sql, "insert into user(name,password,state) values('%s','%s','%s')", user.get_name().c_str(), user.get_password().c_str(), user.get_state().c_str());
 
     LOG_INFO << "sql:" << sql;
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+
+    if (conn->update(sql))
     {
-        if (mysql.update(sql))
-        {
-            // 成功添加信息，获取插入成功的user的id,并返回
-            user.set_id(mysql_insert_id(mysql.get_connect()));
-            // mysql_insert_id 函数用于获取上一次插入操作自动生成的主键ID
-            return true;
-        }
+        // 成功添加信息，获取插入成功的user的id,并返回
+        user.set_id(mysql_insert_id(conn->get_connect()));
+        // mysql_insert_id 函数用于获取上一次插入操作自动生成的主键ID
+        return true;
     }
     return false;
 }
@@ -32,10 +32,11 @@ User UserOperate::query(int id)
     // 组装sql语句
     char sql[1024] = {0};
     sprintf(sql, "select * from user where id=%d", id);
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        MYSQL_RES *res = mysql.query(sql); // 获取查询的返回结果
+        MYSQL_RES *res = conn->query(sql); // 获取查询的返回结果
         if (res != nullptr)
         {
             MYSQL_ROW row = mysql_fetch_row(res); // 获取结果中对应的行
@@ -60,10 +61,11 @@ bool UserOperate::update_state(User &user)
     char sql[1024];
     sprintf(sql, "update user set state='%s' where id=%d", user.get_state().c_str(), user.get_id());
 
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        if (mysql.update(sql))
+        if (conn->update(sql))
         {
             return true;
         }
@@ -77,10 +79,11 @@ bool UserOperate::resetUserState()
     char sql[1024];
     sprintf(sql, "update user set state='offline'");
 
-    Mysql mysql;
-    if (mysql.connect())
+   ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        if (mysql.update(sql))
+        if (conn->update(sql))
         {
             return true;
         }
@@ -96,12 +99,13 @@ bool UserOperate::insertFriend(int userid, int friendid)
     sprintf(sql1, "insert into friend values(%d,%d)", userid, friendid);
     sprintf(sql2, "insert into friend values(%d,%d)", friendid, userid);
 
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
-        if (mysql.update(sql1))
+        if (conn->update(sql1))
         {
-            mysql.update(sql2);
+            conn->update(sql2);
         }
     }
     return false;
@@ -115,11 +119,12 @@ vector<User> UserOperate::queryFriend(int userid)
     sprintf(sql, "select user.id,user.name,user.state from friend inner join user on friend.friendid=user.id where friend.userid=%d;", userid);
     vector<User> vec; // 存储用户好友列表
 
-    Mysql mysql;
-    if (mysql.connect())
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    shared_ptr<MysqlConnection> conn = pool->getConnection();
+    if (conn)
     {
         MYSQL_RES *res = nullptr;
-        res = mysql.query(sql);
+        res = conn->query(sql);
         if (res != nullptr)
         {
             MYSQL_ROW row;
