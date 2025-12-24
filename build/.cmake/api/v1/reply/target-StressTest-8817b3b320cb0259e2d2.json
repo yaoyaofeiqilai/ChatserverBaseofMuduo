@@ -35,12 +35,6 @@
 			{
 				"command" : 1,
 				"file" : 1,
-				"line" : 11,
-				"parent" : 2
-			},
-			{
-				"command" : 1,
-				"file" : 1,
 				"line" : 12,
 				"parent" : 2
 			},
@@ -79,6 +73,12 @@
 				"file" : 1,
 				"line" : 18,
 				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 19,
+				"parent" : 2
 			}
 		]
 	},
@@ -89,6 +89,9 @@
 			[
 				{
 					"fragment" : "-g  "
+				},
+				{
+					"fragment" : "-std=gnu++17"
 				}
 			],
 			"includes" : 

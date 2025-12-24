@@ -87,21 +87,21 @@
 				{
 					"directoryIndex" : 3,
 					"id" : "ChatClient::@8ca63c80a879d0067daa",
-					"jsonFile" : "target-ChatClient-f847fb967e40561efb47.json",
+					"jsonFile" : "target-ChatClient-de29ed52c35115e08aab.json",
 					"name" : "ChatClient",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 2,
 					"id" : "ChatServer::@2804e40980a64c7d7ad1",
-					"jsonFile" : "target-ChatServer-e0ef75b32200986a5dac.json",
+					"jsonFile" : "target-ChatServer-1469cedc8d64e45ee7a3.json",
 					"name" : "ChatServer",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 3,
 					"id" : "StressTest::@8ca63c80a879d0067daa",
-					"jsonFile" : "target-StressTest-a1b50163ab450d07a41b.json",
+					"jsonFile" : "target-StressTest-8817b3b320cb0259e2d2.json",
 					"name" : "StressTest",
 					"projectIndex" : 0
 				}

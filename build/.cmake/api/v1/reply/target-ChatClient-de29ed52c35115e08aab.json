@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "/home/yaoyao/code/ChatserverBaseofMuduo/bin/ChatServer"
+			"path" : "/home/yaoyao/code/ChatserverBaseofMuduo/bin/ChatClient"
 		}
 	],
 	"backtrace" : 1,
@@ -15,7 +15,7 @@
 		],
 		"files" : 
 		[
-			"src/server/CMakeLists.txt",
+			"src/client/CMakeLists.txt",
 			"CMakeLists.txt"
 		],
 		"nodes" : 
@@ -26,17 +26,11 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 16,
+				"line" : 10,
 				"parent" : 0
 			},
 			{
 				"file" : 1
-			},
-			{
-				"command" : 1,
-				"file" : 1,
-				"line" : 11,
-				"parent" : 2
 			},
 			{
 				"command" : 1,
@@ -79,6 +73,12 @@
 				"file" : 1,
 				"line" : 18,
 				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 19,
+				"parent" : 2
 			}
 		]
 	},
@@ -89,6 +89,9 @@
 			[
 				{
 					"fragment" : "-g  "
+				},
+				{
+					"fragment" : "-std=gnu++17"
 				}
 			],
 			"includes" : 
@@ -131,18 +134,11 @@
 			[
 				0,
 				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9
+				2
 			]
 		}
 	],
-	"id" : "ChatServer::@2804e40980a64c7d7ad1",
+	"id" : "ChatClient::@8ca63c80a879d0067daa",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -154,22 +150,6 @@
 			{
 				"fragment" : "-rdynamic",
 				"role" : "flags"
-			},
-			{
-				"fragment" : "-lmuduo_net",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "-lmuduo_base",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "-lmysqlclient",
-				"role" : "libraries"
-			},
-			{
-				"fragment" : "-lhiredis",
-				"role" : "libraries"
 			},
 			{
 				"fragment" : "-lpthread",
@@ -186,12 +166,12 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "ChatServer",
-	"nameOnDisk" : "ChatServer",
+	"name" : "ChatClient",
+	"nameOnDisk" : "ChatClient",
 	"paths" : 
 	{
-		"build" : "src/server",
-		"source" : "src/server"
+		"build" : "src/client",
+		"source" : "src/client"
 	},
 	"sourceGroups" : 
 	[
@@ -201,14 +181,7 @@
 			[
 				0,
 				1,
-				2,
-				3,
-				4,
-				5,
-				6,
-				7,
-				8,
-				9
+				2
 			]
 		}
 	],
@@ -217,55 +190,13 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/server/chatserver.cpp",
+			"path" : "src/client/client.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/server/chatservice.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/main.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/tempCodeRunnerFile.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/db/mysqlconnection.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/dataoperate/groupoperate.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/dataoperate/offlinemsgoperate.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/dataoperate/useroperate.cpp",
-			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"compileGroupIndex" : 0,
-			"path" : "src/server/redis/redis.cpp",
+			"path" : "src/client/main.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

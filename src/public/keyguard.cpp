@@ -84,7 +84,7 @@ string KeyGuard::MsgAESDecrypt(const string &key, const string &cipherTxt)
     // 第二次解密
     if (EVP_DecryptFinal_ex(ctx, msg.data() + len1, &len2) != 1)
     {
-        cerr << "解密失败2" << endl;
+        cerr << "解密失败2-2" << endl;
     }
     string result = string(msg.begin(), msg.begin() + len1 + len2);
 

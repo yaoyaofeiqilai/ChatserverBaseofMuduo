@@ -18,5 +18,10 @@ echo "---------------------------------"
 sysctl -w net.ipv4.ip_local_port_range="1024 65535"
 sysctl -w net.ipv4.tcp_tw_reuse=1
 # 啟動你的客戶端 (請確保路徑正確)
-./ChatServer 127.0.0.1 6000
+./ChatServer 127.0.0.1 6000 &
+./ChatServer 127.0.0.1 6001 &
+./ChatServer 127.0.0.1 6002 &
+./ChatServer 127.0.0.1 6003 &
+./ChatServer 127.0.0.1 6004 &
+
 

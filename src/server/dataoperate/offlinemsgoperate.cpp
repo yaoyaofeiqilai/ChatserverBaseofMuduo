@@ -12,7 +12,7 @@ void OfflineMsgOperate::insertOfflineMsg(int id, string msg)
     if (conn)
     {
         // 插入消息
-       conn->update(sql);
+        conn->update(sql);
     }
 }
 
@@ -35,23 +35,21 @@ void OfflineMsgOperate::removeOfflineMsg(int id)
 vector<string> OfflineMsgOperate::queryOfflineMsg(int id)
 {
     // 组装sql语句
-    char sql[1024];
+    string sql;
     vector<string> msglist;
-    sprintf(sql, "select message from OfflineMessage where userid=%d", id);
+    sql= "select message from OfflineMessage where userid=?";
 
-   ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn) // 连接数据库
     {
-        MYSQL_RES *res = conn->query(sql); // 返回查询结果
-        if (res != nullptr)
+        QueryResult res = conn->query(sql,id); // 返回查询结果
+        if (!res.empty())
         {
-            MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != nullptr)
-            {
-                msglist.push_back(row[0]);
-            }
-            mysql_free_result(res); // 释放资源
+           for(auto& row:res)
+           {
+            msglist.push_back(row["message"]);
+           }
         }
     }
     return msglist;

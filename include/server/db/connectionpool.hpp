@@ -49,11 +49,12 @@ private:
     // 条件变量
     condition_variable cv_NeedConn_;
     condition_variable cv_NotEmpty_;
+    condition_variable cv_NeedClose_;
     // 连接池的状态
     atomic<bool> isRunning_;
 
     // 生产线程
-    thread produceThread_;     //不用detach，防止析构时子线程访问无效资源
+    thread produceThread_; // 不用detach，防止析构时子线程访问无效资源
     // 检测线程
     thread monitorThread_;
 };
@@ -73,6 +74,7 @@ ConnectionPool<T>::~ConnectionPool()
         isRunning_ = false;
         cv_NeedConn_.notify_all();
         cv_NotEmpty_.notify_all();
+        cv_NeedClose_.notify_all();
     }
 
     produceThread_.join();
@@ -186,22 +188,25 @@ void ConnectionPool<T>::monitorConnection() // 监控连接的线程函数，回
 {
     while (isRunning_)
     {
-        this_thread::sleep_for(chrono::seconds(idleTime_)); // 每隔一段时间进行一次回收
+        unique_lock<mutex> lock(connQueMutex_);
+        chrono::steady_clock::time_point deadline = chrono::steady_clock::now() + chrono::seconds(idleTime_);
+        cv_NeedClose_.wait_until(lock, deadline, [this]() -> bool
+                                 { return !isRunning_; });
+
+        if (!isRunning_)
+            return;
+        while (connQue_.size() > minSize_ && isRunning_)
         {
-            lock_guard<mutex> lock(connQueMutex_);
-            while ( connQue_.size()> minSize_ && isRunning_)
+            T *conn = connQue_.front();
+            if (conn->getIdleTime() > idleTime_)
             {
-                T *conn = connQue_.front();
-                if (conn->getIdleTime() > idleTime_)
-                {
-                    connQue_.pop();
-                    curSize_--;
-                    delete conn; // 释放连接
-                }
-                else
-                {
-                    break;
-                }
+                connQue_.pop();
+                curSize_--;
+                delete conn; // 释放连接
+            }
+            else
+            {
+                break;
             }
         }
     }

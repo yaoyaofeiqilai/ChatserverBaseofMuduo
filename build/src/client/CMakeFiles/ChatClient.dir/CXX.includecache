@@ -440,3 +440,13 @@ type_traits
 client.hpp
 /home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.hpp
 
+/home/yaoyao/code/ChatserverBaseofMuduo/src/client/main.cpp
+client.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.hpp
+keyguard.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/client/keyguard.hpp
+
+/home/yaoyao/code/ChatserverBaseofMuduo/src/public/keyguard.cpp
+keyguard.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/public/keyguard.hpp
+

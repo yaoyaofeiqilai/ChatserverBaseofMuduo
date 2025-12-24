@@ -30,26 +30,20 @@ bool UserOperate::
 User UserOperate::query(int id)
 {
     // 组装sql语句
-    char sql[1024] = {0};
-    sprintf(sql, "select * from user where id=%d", id);
+    string sql = "select * from user where id=?";
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        MYSQL_RES *res = conn->query(sql); // 获取查询的返回结果
-        if (res != nullptr)
+        QueryResult res = conn->query(sql,id); // 获取查询的返回结果
+        if (res.size()==1)
         {
-            MYSQL_ROW row = mysql_fetch_row(res); // 获取结果中对应的行
-            if (row != nullptr)
-            {
-                User user;
-                user.set_id(atoi(row[0]));
-                user.set_name(row[1]);
-                user.set_password(row[2]);
-                user.set_state(row[3]);
-                mysql_free_result(res); // 释放结果占用的内存资源，防止资源泄露
-                return user;
-            }
+            User user;
+            user.set_id(id);
+            user.set_name(res[0]["name"]);
+            user.set_password(res[0]["password"]);
+            user.set_state(res[0]["state"]);
+            return user;
         }
     }
     return User();
@@ -79,7 +73,7 @@ bool UserOperate::resetUserState()
     char sql[1024];
     sprintf(sql, "update user set state='offline'");
 
-   ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
+    ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
@@ -114,27 +108,25 @@ bool UserOperate::insertFriend(int userid, int friendid)
 // 查询登录用户的好友列表
 vector<User> UserOperate::queryFriend(int userid)
 {
-    char sql[1024];
+    string sql="select user.id,user.name,user.state from friend inner join user on friend.friendid=user.id where friend.userid=?";
     // 查询用户好友的sql语句
-    sprintf(sql, "select user.id,user.name,user.state from friend inner join user on friend.friendid=user.id where friend.userid=%d;", userid);
+
+
     vector<User> vec; // 存储用户好友列表
 
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        MYSQL_RES *res = nullptr;
-        res = conn->query(sql);
-        if (res != nullptr)
+        QueryResult res = conn->query(sql,userid);
+        User user;
+        if (!res.empty())
         {
-            MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != nullptr)
+            for(auto& row:res)
             {
-                // 将查询结果传入vec
-                User user;
-                user.set_id(atoi(row[0]));
-                user.set_name(row[1]);
-                user.set_state(row[2]);
+                user.set_id(stoi(row["id"]));
+                user.set_name(row["name"]);
+                user.set_state(row["state"]);
                 vec.push_back(user);
             }
         }

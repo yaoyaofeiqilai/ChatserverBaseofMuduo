@@ -8,7 +8,7 @@ sem_t acksem;
 void func(int seq)
 {
     string ip = "127.0.0.1";
-    uint16_t port = atoi("6000");
+    uint16_t port = atoi("8000");
     // 创建客户端网络嵌套字scoket
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (clientfd == -1)
@@ -48,7 +48,7 @@ void func(int seq)
     string aeskey;
     string publickey;
     string buffer(1024, '0');
-    int len = recv(clientfd, &buffer[0], 1000, 0);
+    int len = recv(clientfd, &buffer[0], 1024, 0);
     if (len <= 0)
     {
         // 服务器关闭或出错，直接退出当前用户线程，不要抛异常
@@ -103,8 +103,8 @@ void func(int seq)
     }
 
     // 接收响应
-    buffer.resize(1024);
-    len = recv(clientfd, &buffer[0], 1024, 0);
+    buffer.resize(1000000);
+    len = recv(clientfd, &buffer[0], 1000000, 0);
     if (len == -1)
     {
         cerr << "recv login ack error" << endl;
@@ -112,8 +112,18 @@ void func(int seq)
     buffer.resize(len);
     // 解密
     buffer = keyguard->MsgAESDecrypt(aeskey, buffer);
-    // 解析
-    js = json::parse(buffer);
+
+    try
+    { // 解析
+        js = json::parse(buffer);
+    }
+    catch (json::exception &e)
+    {
+        cout << e.what() << endl;
+        cout<<len<<endl;
+        cout<<buffer<<endl;
+        return;
+    }
     if (js["msgid"].get<int>() == LOGIN_MSG_ACK && js["errno"].get<int>() == 0)
     {
         if (seq % 10 == 0)
@@ -213,7 +223,6 @@ int main()
         } });
     t.detach();
 
-    
     for (auto &thr : thrs)
     {
         thr.join();

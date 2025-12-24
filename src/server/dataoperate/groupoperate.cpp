@@ -42,26 +42,21 @@ bool GroupOperata::addGroup(int userid, int groupid, string role)
 // 查询组成员,用于转发消息
 vector<int> GroupOperata::queryNumber(int groupid, int userid)
 {
-    char sql[1024];
-    sprintf(sql, "select userid from GroupUser where groupid=%d and userid !=%d", groupid,userid);
+    //需要预编译的sql语句
+    string sql="select userid from GroupUser where groupid=? and userid !=?";
     
     vector<int> idVec;
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        MYSQL_RES *res = conn->query(sql);
-        if (res != nullptr)
+        QueryResult res = conn->query(sql,groupid,userid);
+        if (!res.empty())
         {
-            MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != nullptr)
-            {
-                if (atoi(row[0]) != userid) // 不包含自己
-                {
-                    idVec.push_back(atoi(row[0]));
-                }
-            }
-            mysql_free_result(res);
+           for(auto &row:res)
+           {
+               idVec.push_back(stoi(row["userid"].c_str()));
+           }
         }
     }
     return idVec;
@@ -70,48 +65,44 @@ vector<int> GroupOperata::queryNumber(int groupid, int userid)
 // 查询用户加入的组信息,并返回
 vector<Group> GroupOperata::queryGroup(int userid)
 {
-    char sql[1024];
-    sprintf(sql, "select a.id,a.groupname,a.groupdesc from AllGroup a inner join GroupUser b on a.id=b.groupid where b.userid=%d", userid);
+    //预编译的sql语句
+    string sql="select a.id,a.groupname,a.groupdesc from AllGroup a inner join GroupUser b on a.id=b.groupid where b.userid=?";
 
     vector<Group> groupVec;
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        MYSQL_RES *res =conn->query(sql);
-        if (res != nullptr)
-        {
-            MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != nullptr)
+        QueryResult res =conn->query(sql,userid);
+        if (!res.empty())
+        { 
+            Group group;
+            for(auto& row:res)
             {
-                Group group;
-                group.set_id(atoi(row[0]));
-                group.set_name(row[1]);
-                group.set_desc(row[2]);
+                group.set_id(stoi(row["id"]));
+                group.set_desc(row["groupdesc"]);
+                group.set_name(row["groupname"]);
                 groupVec.push_back(group);
             }
-            mysql_free_result(res);
         }
     }
 
     // 查询组内成员信息
+    sql= "select a.id,a.name,a.state,b.grouprole from user a inner join GroupUser b on a.id=b.userid where b.groupid=?";
     for (Group &group : groupVec)
     {
-        sprintf(sql, "select a.id,a.name,a.state,b.grouprole from user a inner join GroupUser b on a.id=b.userid where b.groupid=%d", group.get_id());
-        MYSQL_RES *res = conn->query(sql);
-        if (res != nullptr)
+        QueryResult res = conn->query(sql,group.get_id());
+        if (!res.empty())
         {
-            MYSQL_ROW row;
-            while ((row = mysql_fetch_row(res)) != nullptr)
+            GroupUser guser;
+            for(auto& row:res)
             {
-                GroupUser guser;
-                guser.set_id(atoi(row[0]));
-                guser.set_name(row[1]);
-                guser.set_state(row[2]);
-                guser.set_role(row[3]);
+                guser.set_id(stoi(row["id"]));
+                guser.set_name(row["name"]);
+                guser.set_role(row["grouprole"]);
+                guser.set_state(row["state"]);
                 group.get_number().push_back(guser);
             }
-            mysql_free_result(res);
         }
     }
     return groupVec;
