@@ -11,7 +11,7 @@ using json = nlohmann::json;
 using namespace std::placeholders;
 // 初始化构造函数，同时设置事件的回调函数
 ChatServer::ChatServer(EventLoop *loop, const InetAddress &listenAddr, const string &nameArg)
-    : server_(loop, listenAddr, nameArg), loop_(loop)
+    : server_(loop, listenAddr, nameArg), loop_(loop), serverName_(nameArg), totalconnectedCount_(0)
 {
    loop_->runEvery(5.0, [this]()
                    { std::cout << "当前连接数: " << this->totalconnectedCount_ << std::endl; });
@@ -31,6 +31,7 @@ void ChatServer::start()
    server_.start();
 
    //初始化service
+   ChatService::setServerName(serverName_);
    ChatService::instance();
 
    // 生成公私钥

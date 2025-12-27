@@ -111,6 +111,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+src/server/CMakeFiles/test.dir/rule:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f CMakeFiles/Makefile2 src/server/CMakeFiles/test.dir/rule
+.PHONY : src/server/CMakeFiles/test.dir/rule
+
+# Convenience name for target.
+test: src/server/CMakeFiles/test.dir/rule
+
+.PHONY : test
+
+# fast build rule for target.
+test/fast:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/build
+.PHONY : test/fast
+
+# Convenience name for target.
 src/server/CMakeFiles/ChatServer.dir/rule:
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f CMakeFiles/Makefile2 src/server/CMakeFiles/ChatServer.dir/rule
 .PHONY : src/server/CMakeFiles/ChatServer.dir/rule
@@ -131,6 +146,7 @@ __/public/keyguard.o: __/public/keyguard.cpp.o
 
 # target to build an object file
 __/public/keyguard.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/__/public/keyguard.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/__/public/keyguard.cpp.o
 .PHONY : __/public/keyguard.cpp.o
 
@@ -140,6 +156,7 @@ __/public/keyguard.i: __/public/keyguard.cpp.i
 
 # target to preprocess a source file
 __/public/keyguard.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/__/public/keyguard.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/__/public/keyguard.cpp.i
 .PHONY : __/public/keyguard.cpp.i
 
@@ -149,6 +166,7 @@ __/public/keyguard.s: __/public/keyguard.cpp.s
 
 # target to generate assembly for a file
 __/public/keyguard.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/__/public/keyguard.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/__/public/keyguard.cpp.s
 .PHONY : __/public/keyguard.cpp.s
 
@@ -212,6 +230,7 @@ dataoperate/groupoperate.o: dataoperate/groupoperate.cpp.o
 
 # target to build an object file
 dataoperate/groupoperate.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/groupoperate.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.o
 .PHONY : dataoperate/groupoperate.cpp.o
 
@@ -221,6 +240,7 @@ dataoperate/groupoperate.i: dataoperate/groupoperate.cpp.i
 
 # target to preprocess a source file
 dataoperate/groupoperate.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/groupoperate.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.i
 .PHONY : dataoperate/groupoperate.cpp.i
 
@@ -230,6 +250,7 @@ dataoperate/groupoperate.s: dataoperate/groupoperate.cpp.s
 
 # target to generate assembly for a file
 dataoperate/groupoperate.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/groupoperate.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/groupoperate.cpp.s
 .PHONY : dataoperate/groupoperate.cpp.s
 
@@ -239,6 +260,7 @@ dataoperate/offlinemsgoperate.o: dataoperate/offlinemsgoperate.cpp.o
 
 # target to build an object file
 dataoperate/offlinemsgoperate.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/offlinemsgoperate.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.o
 .PHONY : dataoperate/offlinemsgoperate.cpp.o
 
@@ -248,6 +270,7 @@ dataoperate/offlinemsgoperate.i: dataoperate/offlinemsgoperate.cpp.i
 
 # target to preprocess a source file
 dataoperate/offlinemsgoperate.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/offlinemsgoperate.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.i
 .PHONY : dataoperate/offlinemsgoperate.cpp.i
 
@@ -257,6 +280,7 @@ dataoperate/offlinemsgoperate.s: dataoperate/offlinemsgoperate.cpp.s
 
 # target to generate assembly for a file
 dataoperate/offlinemsgoperate.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/offlinemsgoperate.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/offlinemsgoperate.cpp.s
 .PHONY : dataoperate/offlinemsgoperate.cpp.s
 
@@ -266,6 +290,7 @@ dataoperate/useroperate.o: dataoperate/useroperate.cpp.o
 
 # target to build an object file
 dataoperate/useroperate.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/useroperate.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.o
 .PHONY : dataoperate/useroperate.cpp.o
 
@@ -275,6 +300,7 @@ dataoperate/useroperate.i: dataoperate/useroperate.cpp.i
 
 # target to preprocess a source file
 dataoperate/useroperate.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/useroperate.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.i
 .PHONY : dataoperate/useroperate.cpp.i
 
@@ -284,6 +310,7 @@ dataoperate/useroperate.s: dataoperate/useroperate.cpp.s
 
 # target to generate assembly for a file
 dataoperate/useroperate.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/dataoperate/useroperate.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/dataoperate/useroperate.cpp.s
 .PHONY : dataoperate/useroperate.cpp.s
 
@@ -293,6 +320,7 @@ db/mysqlconnection.o: db/mysqlconnection.cpp.o
 
 # target to build an object file
 db/mysqlconnection.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/db/mysqlconnection.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.o
 .PHONY : db/mysqlconnection.cpp.o
 
@@ -302,6 +330,7 @@ db/mysqlconnection.i: db/mysqlconnection.cpp.i
 
 # target to preprocess a source file
 db/mysqlconnection.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/db/mysqlconnection.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.i
 .PHONY : db/mysqlconnection.cpp.i
 
@@ -311,6 +340,7 @@ db/mysqlconnection.s: db/mysqlconnection.cpp.s
 
 # target to generate assembly for a file
 db/mysqlconnection.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/db/mysqlconnection.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/db/mysqlconnection.cpp.s
 .PHONY : db/mysqlconnection.cpp.s
 
@@ -347,6 +377,7 @@ redis/redis.o: redis/redis.cpp.o
 
 # target to build an object file
 redis/redis.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/redis/redis.cpp.o
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/redis/redis.cpp.o
 .PHONY : redis/redis.cpp.o
 
@@ -356,6 +387,7 @@ redis/redis.i: redis/redis.cpp.i
 
 # target to preprocess a source file
 redis/redis.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/redis/redis.cpp.i
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/redis/redis.cpp.i
 .PHONY : redis/redis.cpp.i
 
@@ -365,6 +397,7 @@ redis/redis.s: redis/redis.cpp.s
 
 # target to generate assembly for a file
 redis/redis.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/redis/redis.cpp.s
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/redis/redis.cpp.s
 .PHONY : redis/redis.cpp.s
 
@@ -395,6 +428,33 @@ tempCodeRunnerFile.cpp.s:
 	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/ChatServer.dir/build.make src/server/CMakeFiles/ChatServer.dir/tempCodeRunnerFile.cpp.s
 .PHONY : tempCodeRunnerFile.cpp.s
 
+test/test.o: test/test.cpp.o
+
+.PHONY : test/test.o
+
+# target to build an object file
+test/test.cpp.o:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/test/test.cpp.o
+.PHONY : test/test.cpp.o
+
+test/test.i: test/test.cpp.i
+
+.PHONY : test/test.i
+
+# target to preprocess a source file
+test/test.cpp.i:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/test/test.cpp.i
+.PHONY : test/test.cpp.i
+
+test/test.s: test/test.cpp.s
+
+.PHONY : test/test.s
+
+# target to generate assembly for a file
+test/test.cpp.s:
+	cd /home/yaoyao/code/ChatserverBaseofMuduo/build && $(MAKE) -f src/server/CMakeFiles/test.dir/build.make src/server/CMakeFiles/test.dir/test/test.cpp.s
+.PHONY : test/test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -403,6 +463,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... test"
 	@echo "... ChatServer"
 	@echo "... __/public/keyguard.o"
 	@echo "... __/public/keyguard.i"
@@ -434,6 +495,9 @@ help:
 	@echo "... tempCodeRunnerFile.o"
 	@echo "... tempCodeRunnerFile.i"
 	@echo "... tempCodeRunnerFile.s"
+	@echo "... test/test.o"
+	@echo "... test/test.i"
+	@echo "... test/test.s"
 .PHONY : help
 
 

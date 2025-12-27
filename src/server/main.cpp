@@ -23,8 +23,9 @@ int main(int argc, char **argv)
     EventLoop loop;
     InetAddress addr(ip, port);
 
+    string name = argv[3];
     // 注册服务器类
-    ChatServer server(&loop, addr, "ChatServer01");
+    ChatServer server(&loop, addr, name);
 
     // 启动服务器
     server.start();

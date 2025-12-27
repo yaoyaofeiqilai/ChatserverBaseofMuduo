@@ -6,6 +6,9 @@
 using namespace std::placeholders;
 using namespace muduo;
 
+// 静态成员变量定义
+string ChatService::serverName_;
+
 // 获取唯一实例的方法
 ChatService *ChatService::instance()
 {
@@ -25,18 +28,25 @@ ChatService::ChatService()
     msgHandlerMap_.insert({GROUP_CHAT_MSG, std::bind(&ChatService::groupChat, this, _1, _2, _3)});
     msgHandlerMap_.insert({LOGINOUT_MSG, std::bind(&ChatService::userLoginout, this, _1, _2, _3)});
     msgHandlerMap_.insert({AES_KEY_MSG, std::bind(&ChatService::clientAESkey, this, _1, _2, _3)});
-    useroperate_.resetUserState();
+    // 重置用户状态
+    // useroperate_.resetUserState();
+
     totalMsgCount_ = 0;
     thread thread_performance(&ChatService::performanceTest, this);
-    thread_performance.detach(); 
-    // if (redis_.connect())
-    // {
-    //     redis_.beginlisten()
-    //     redis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
-    // }
+    thread_performance.detach();
+
+    if (subscribeRedis_.connect("127.0.0.1", "", "yaoyaofeiqilai1111", "", 6379))
+    { // 订阅消息
+        subscribeRedis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
+        subscribeRedis_.subscribe(serverName_);
+        subscribeRedis_.beginlisten();
+    }
 
     mysqlPool_ = ConnectionPool<MysqlConnection>::getInstance();
-    mysqlPool_->init_pool("127.0.0.1",3306,"root","Lsg20041013.","chat",16,1024,60,5000);
+    mysqlPool_->init_pool("127.0.0.1", 3306, "root", "Lsg20041013.", "chat", 16, 1024, 60, 5000);
+
+    redisPool_ = ConnectionPool<Redis>::getInstance();
+    redisPool_->init_pool("127.0.0.1", 6379, "", "yaoyaofeiqilai1111", "", 16, 1024, 60, 5000);
 }
 
 // 登录信息的处理方法
@@ -67,8 +77,6 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             user.set_state("online");
             // 更新数据库中用户的状态
             useroperate_.update_state(user);
-            // 订阅相应的通道
-            // redis_.subscribe(user.get_id());
 
             // 将用户连接添加到连接表中
             {
@@ -81,6 +89,11 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             resp["name"] = user.get_name();
             resp["errno"] = 0; // 错误码等于零时表示没有错误
 
+            // 将用户信息加入redis数据库中
+            {
+                auto redisConn = redisPool_->getConnection();
+                redisConn->hset("onlineUser", to_string(user.get_id()), serverName_);
+            }
             // 登录成功后，查询用户的好友列表
             vector<User> friendlist = useroperate_.queryFriend(id);
             if (!friendlist.empty())
@@ -101,6 +114,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             vector<Group> grouplist = groupOperata_.queryGroup(id);
             if (!grouplist.empty())
             {
+                auto redisConn = redisPool_->getConnection();
                 for (auto &group : grouplist)
                 {
                     json grpjs;
@@ -115,6 +129,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
                         js["numbername"] = user.get_name();
                         js["numberstate"] = user.get_state();
                         js["numberrole"] = user.get_role();
+                        redisConn->lpush(to_string(group.get_id()), std::to_string(user.get_id()));
                         uservec.push_back(js.dump());
                     }
                     grpjs["numberlist"] = uservec; // 群组成员
@@ -159,9 +174,6 @@ void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp
             userConnMap_.erase(it);
         }
     }
-
-    // 取消订阅通道
-    // redis_.unsubscribe(userid);
 
     // 修改状态
     User user;
@@ -265,33 +277,17 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
         }
     }
 
-    // 查询是否在其他服务器上
-    User user = useroperate_.query(toid);
-    if (user.get_state() == "online")
+    // 在redis上查看是否在线
+    auto redisConn = redisPool_->getConnection();
+    string serverName = redisConn->hget("onlineUser", std::to_string(toid));
+    if (serverName != "")
     {
-        // static thread_local Redis thread_redis;
-        // static thread_local bool is_connected = false;
-
-        // if (!is_connected)
-        // {
-        //     if (thread_redis.connect())
-        //     {
-        //         is_connected = true;
-        //     }
-        //     else
-        //     {
-        //         LOG_ERROR << "Redis connect failed";
-        //         return;
-        //     }
-        // }
-
-    //     // 现在这个 thread_redis 是当前线程独享的，绝对安全
-    //     // thread_redis.publish(user.get_id(), js.dump());
-    //     // redis_.publish(user.get_id(), js.dump());
-    //     return;
-    
+        // 转发信息
+        cout << "命中111" << endl;
+        cout<<serverName<<endl;
+        redisConn->publish(serverName, js.dump());
     }
-    // // 收件人不在线，将消息存储在数据库中，等下次上线时转发
+    // 收件人不在线，将消息存储在数据库中，等下次上线时转发
     offlineMsgOperate_.insertOfflineMsg(toid, js.dump());
 }
 
@@ -354,7 +350,22 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
     // 获取这个群成员id
     int groupid = js["groupid"];
     int userid = js["userid"];
-    vector<int> numid = groupOperata_.queryNumber(groupid, userid);
+    auto redisConn = redisPool_->getConnection();
+    // 去redis数据库中查询
+    vector<string> tmp = redisConn->lrange(to_string(groupid), 0, -1);
+    vector<int> numid;
+    if (tmp.empty())
+    { // 去Mysql数据库中查询
+        numid = groupOperata_.queryNumber(groupid, userid);
+    }
+    else
+    {
+        cout<<"命中"<<endl;
+        for (auto &id : tmp)
+        {
+            numid.push_back(stoi(id));
+        }
+    }
 
     // 逐个转发信息
     {
@@ -428,14 +439,20 @@ string ChatService::serverMsgEncrtpt(const TcpConnectionPtr &conn, json &js)
 
 void ChatService::performanceTest()
 {
-    cout<<"-----性能检测线程启动-----"<<endl;
-    KeyGuard* ptr= KeyGuard::GetInstance();
+    cout << "-----性能检测线程启动-----" << endl;
+    KeyGuard *ptr = KeyGuard::GetInstance();
     while (true)
     {
-        cout<<"当前登录用户数："<< ptr->showMapSize() << endl;
+        cout << "当前登录用户数：" << ptr->showMapSize() << endl;
         int last = totalMsgCount_.load();
         std::this_thread::sleep_for(std::chrono::seconds(5));
         cout << "当前总共处理信息数：" << totalMsgCount_.load() << endl;
-        cout<<"每秒处理信息数：" << (totalMsgCount_ - last)/5 << endl;     
+        cout << "每秒处理信息数：" << (totalMsgCount_ - last) / 5 << endl;
     }
+}
+
+// 设置服务器名字
+void ChatService::setServerName(const string &name)
+{
+    serverName_ = name;
 }

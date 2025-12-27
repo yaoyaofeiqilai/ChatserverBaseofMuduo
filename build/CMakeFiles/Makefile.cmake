@@ -126,6 +126,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "src/server/CMakeFiles/test.dir/DependInfo.cmake"
   "src/server/CMakeFiles/ChatServer.dir/DependInfo.cmake"
   "src/client/CMakeFiles/StressTest.dir/DependInfo.cmake"
   "src/client/CMakeFiles/ChatClient.dir/DependInfo.cmake"

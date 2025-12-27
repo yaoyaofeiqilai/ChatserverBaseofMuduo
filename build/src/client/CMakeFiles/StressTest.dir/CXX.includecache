@@ -436,6 +436,10 @@ limits
 type_traits
 -
 
+/home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.cpp
+client.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.hpp
+
 /home/yaoyao/code/ChatserverBaseofMuduo/src/client/stresstest.cpp
 client.hpp
 /home/yaoyao/code/ChatserverBaseofMuduo/src/client/client.hpp
@@ -447,4 +451,8 @@ ctime
 -
 sys/resource.h
 -
+
+/home/yaoyao/code/ChatserverBaseofMuduo/src/public/keyguard.cpp
+keyguard.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/public/keyguard.hpp
 

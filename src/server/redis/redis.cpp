@@ -3,53 +3,66 @@
 using namespace std;
 
 Redis::Redis()
-    : publish_context_(nullptr), subscribe_context_(nullptr)
+    : context_(nullptr)
 {
 }
 
 Redis::~Redis()
 {
-    if (publish_context_ != nullptr)
+    if (context_ != nullptr)
     {
-        redisFree(publish_context_);
-    }
-
-    if (subscribe_context_ != nullptr)
-    {
-        redisFree(subscribe_context_);
+        redisFree(context_);
     }
 }
 
-bool Redis::connect()
+bool Redis::connect(std::string ip, std::string user, std::string password, std::string dbname, int port)
 {
     // 负责publish发布消息的上下文连接
-    publish_context_ = redisConnect("127.0.0.1", 6379);
-    if (nullptr == publish_context_)
+    bool res = false;
+    context_ = redisConnect(ip.c_str(), port);
+    if (nullptr == context_ || context_->err)
     {
         cerr << "connect redis failed!" << endl;
-        return false;
+        return res;
     }
 
-    // 负责subscribe订阅消息的上下文连接
-    subscribe_context_ = redisConnect("127.0.0.1", 6379);
-    if (nullptr == subscribe_context_)
+    redisReply *reply = (redisReply *)redisCommand(context_, "auth %s", password.c_str());
+    if (reply == nullptr)
     {
-        cerr << "connect redis failed!" << endl;
-        return false;
+        cerr << "auth failed!" << endl;
+        return res;
     }
-    redisCommand(publish_context_, "auth yaoyaofeiqilai1111");
-    redisCommand(subscribe_context_, "auth yaoyaofeiqilai1111");
-    return true;
+
+    if (reply->type == REDIS_REPLY_STATUS)
+    {
+        if (string(reply->str) == "OK")
+        {
+           // cout << "login success" << endl;
+            res = true;
+        }
+        else
+        {
+            cout<<"password is wrong"<<endl;
+        }
+    }
+
+    freeReplyObject(reply);
+    return res;
 }
 
 // 向redis指定的通道channel发布消息
-bool Redis::publish(int channel, string message)
+bool Redis::publish(string channel, string message)
 {
-    lock_guard<mutex> lock(publish_mutex_);
-    redisReply *reply = (redisReply *)redisCommand(publish_context_, "PUBLISH %d %s", channel, message.c_str());
+    redisReply *reply = (redisReply *)redisCommand(context_, "PUBLISH %s %s", channel, message.c_str());
     if (nullptr == reply)
     {
         cerr << "publish command failed!" << endl;
+        return false;
+    }
+    if(reply->type == REDIS_REPLY_INTEGER)
+    {
+        cerr << "发布成功" << reply->integer<<endl;
+        freeReplyObject(reply);
         return false;
     }
     freeReplyObject(reply);
@@ -57,13 +70,12 @@ bool Redis::publish(int channel, string message)
 }
 
 // 向redis指定的通道subscribe订阅消息
-bool Redis::subscribe(int channel)
+bool Redis::subscribe(string channel)
 {
-    lock_guard<mutex> lock(this->subscribe_mutex_);
     // SUBSCRIBE命令本身会造成线程阻塞等待通道里面发生消息，这里只做订阅通道，不接收通道消息
     // 通道消息的接收专门在observer_channel_message函数中的独立线程中进行
     // 只负责发送命令，不阻塞接收redis server响应消息，否则和notifyMsg线程抢占响应资源
-    if (REDIS_ERR == redisAppendCommand(this->subscribe_context_, "SUBSCRIBE %d", channel))
+    if (REDIS_ERR == redisAppendCommand(this->context_, "SUBSCRIBE %s", channel.c_str()))
     {
         cerr << "subscribe command failed!" << endl;
         return false;
@@ -72,7 +84,7 @@ bool Redis::subscribe(int channel)
     int done = 0;
     while (!done)
     {
-        if (REDIS_ERR == redisBufferWrite(this->subscribe_context_, &done))
+        if (REDIS_ERR == redisBufferWrite(this->context_, &done))
         {
             cerr << "subscribe command failed!" << endl;
             return false;
@@ -84,10 +96,9 @@ bool Redis::subscribe(int channel)
 }
 
 // 向redis指定的通道unsubscribe取消订阅消息
-bool Redis::unsubscribe(int channel)
+bool Redis::unsubscribe(string channel)
 {
-    lock_guard<mutex> lock(this->subscribe_mutex_);
-    if (REDIS_ERR == redisAppendCommand(this->subscribe_context_, "UNSUBSCRIBE %d", channel))
+    if (REDIS_ERR == redisAppendCommand(this->context_, "UNSUBSCRIBE %s", channel.c_str()))
     {
         cerr << "unsubscribe command failed!" << endl;
         return false;
@@ -96,7 +107,7 @@ bool Redis::unsubscribe(int channel)
     int done = 0;
     while (!done)
     {
-        if (REDIS_ERR == redisBufferWrite(this->subscribe_context_, &done))
+        if (REDIS_ERR == redisBufferWrite(this->context_, &done))
         {
             cerr << "unsubscribe command failed!" << endl;
             return false;
@@ -109,8 +120,9 @@ bool Redis::unsubscribe(int channel)
 void Redis::observer_channel_message()
 {
     redisReply *reply = nullptr;
-    while (REDIS_OK == redisGetReply(this->subscribe_context_, (void **)&reply))
+    while (REDIS_OK == redisGetReply(this->context_, (void **)&reply))
     {
+        cout<<"收到心得消息"<<endl;
         // 订阅收到的消息是一个带三元素的数组
         if (reply != nullptr && reply->element[2] != nullptr && reply->element[2]->str != nullptr)
         {
@@ -138,3 +150,148 @@ void Redis::beginlisten()
 
     // cout << "connect redis-server success!" << endl;
 }
+
+bool Redis::set(string key, string value)
+{
+    // 执行状态
+    bool status = false;
+    redisReply *reply = (redisReply *)redisCommand(context_, "SET %s %s", key.c_str(), value.c_str());
+
+    if (nullptr == reply)
+    {
+        cerr << "set command failed!" << endl;
+    }
+
+    if (reply->type == REDIS_REPLY_STATUS && string(reply->str) == "OK")
+    {
+        status = true;
+    }
+
+    freeReplyObject(reply);
+    return status;
+}
+bool Redis::hset(string key, string field, string value)
+{
+    redisReply *reply = (redisReply *)redisCommand(context_, "HSET %s %s %s", key.c_str(), field.c_str(), value.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "Hset command failed!" << endl;
+        return false;
+    }
+
+    bool status = false;
+    if (reply->type == REDIS_REPLY_INTEGER && reply->integer >= 0)
+    {
+        status = true;
+    }
+    freeReplyObject(reply);
+    return status;
+}
+
+// 添加群组成员
+bool Redis::lpush(string key, string value)
+{
+    redisReply *reply = (redisReply *)redisCommand(context_, "LPUSH %s %s", key.c_str(), value.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "Lpush command failed!" << endl;
+        return false;
+    }
+
+    bool status = false;
+    if (reply->type == REDIS_REPLY_INTEGER && reply->integer >= 0)
+    {
+        status = true;
+    }
+    freeReplyObject(reply);
+    return status;
+}
+
+bool Redis::del(string key)
+{
+    redisReply *reply = (redisReply *)redisCommand(context_, "DEL %s", key.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "del command failed!" << endl;
+        return false;
+    }
+
+    bool status = false;
+    if (reply->type == REDIS_REPLY_INTEGER)
+    {
+        status = true;
+    }
+    freeReplyObject(reply);
+    return status;
+}
+
+bool Redis::hdel(string key, string field)
+{
+    redisReply *reply = (redisReply *)redisCommand(context_, "HDEL %s %s", key.c_str(), field.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "Hdel command failed!" << endl;
+        return false;
+    }
+
+    bool status = false;
+    if (reply->type == REDIS_REPLY_INTEGER && reply->integer >= 0)
+    {
+        status = true;
+    }
+    freeReplyObject(reply);
+    return status;
+}
+
+vector<string> Redis::lrange(string key, int start, int end)
+{
+    vector<string> userVec;
+    redisReply *reply = (redisReply *)redisCommand(context_, "LRANGE %s %d %d", key.c_str(), start, end);
+    if (reply == nullptr)
+    {
+        cerr << "command getGroupUser fail!" << endl;
+        return userVec;
+    }
+
+    if (reply->type == REDIS_REPLY_ARRAY)
+    {
+        for (int i = 0; i < reply->elements; i++)
+        {
+            if (reply->element[i]->type == REDIS_REPLY_STRING)
+            {
+                userVec.push_back(reply->element[i]->str);
+            }
+        }
+    }
+    freeReplyObject(reply);
+    return userVec;
+}
+
+string Redis::hget(string key, string field)
+{
+    string res="";
+    // 查看用户是否在线表中,没在则不在线
+    redisReply *reply = (redisReply *)redisCommand(context_, "HGET %s %s", key.c_str(), field.c_str());
+    if (reply == nullptr)
+    {
+        cerr << "command getStatus fail!" << endl;
+        return res;
+    }
+
+    if (reply->type == REDIS_REPLY_STRING)  //没有查到即不在线返回值类型为REDIS_REPLY_NIL
+    {
+        res = reply->str;
+    }
+
+    freeReplyObject(reply);
+    return res;
+}
+
+void Redis::updateTime()
+{
+    lastTime_ = chrono::steady_clock::now();
+} // 更新使用时间
+int Redis::getIdleTime()
+{
+    return chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - lastTime_).count();
+} // 获取空闲时间

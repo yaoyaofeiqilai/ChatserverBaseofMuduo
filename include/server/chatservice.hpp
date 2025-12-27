@@ -74,6 +74,10 @@ class ChatService
 
     //启动性能检测函数
     void performanceTest();
+
+    //设置服务器的名字
+    static void setServerName(const string& name);
+
     private :
     //构造函数
     ChatService();
@@ -97,12 +101,16 @@ class ChatService
     //连接池指针
     ConnectionPool<MysqlConnection>* mysqlPool_;
 
+    //redis连接池指针
+    ConnectionPool<Redis>* redisPool_;
 
     //redis操作对象
-    Redis redis_;
+    Redis subscribeRedis_;
 
     //总共发送到信息数
     atomic<int> totalMsgCount_;
-};
 
+    //服务器名字
+    static string serverName_;
+};
 #endif

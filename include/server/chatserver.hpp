@@ -22,5 +22,7 @@ class ChatServer
     EventLoop* loop_;      //相当于epoll
 
     std::atomic<int> totalconnectedCount_;
+
+    string serverName_;
 };
 #endif

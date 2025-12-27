@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/server/redis/redis.hpp
+hiredis/hiredis.h
+-
+thread
+-
+functional
+-
+mutex
+-
+vector
+-
+chrono
+-
+
+/home/yaoyao/code/ChatserverBaseofMuduo/src/server/redis/redis.cpp
+redis.hpp
+/home/yaoyao/code/ChatserverBaseofMuduo/src/server/redis/redis.hpp
+iostream
+-
+
