@@ -147,7 +147,7 @@ void func(int seq)
         // 随机向一名用户发送信息
         json chatjs;
         chatjs["msgid"] = ONE_CHAT_MSG;
-        int toid = rand() % 10000 + 10000;
+        int toid = rand() % 20000 + 10000;
         chatjs["to"] = toid;
         chatjs["from"] = seq + 10000;
         chatjs["name"] = "testuser" + to_string(seq);

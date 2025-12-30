@@ -44,10 +44,10 @@ ChatService::ChatService()
     }
 
     mysqlPool_ = ConnectionPool<MysqlConnection>::getInstance();
-    mysqlPool_->init_pool("127.0.0.1", 3306, "root", "Lsg20041013.", "chat", 16, 1024, 60, 5000);
+    mysqlPool_->init_pool("127.0.0.1", 3306, "root", "Lsg20041013.", "chat", 16, 100, 60, 5000);
 
     redisPool_ = ConnectionPool<Redis>::getInstance();
-    redisPool_->init_pool("127.0.0.1", 6379, "", "yaoyaofeiqilai1111", "", 16, 1024, 60, 5000);
+    redisPool_->init_pool("127.0.0.1", 6379, "", "yaoyaofeiqilai1111", "", 16, 100, 60, 5000);
 }
 
 // 登录信息的处理方法
@@ -142,7 +142,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             vector<string> msglist = offlineMsgOperate_.queryOfflineMsg(user.get_id());
             if (msglist.size())
             {
-                resp["offlinemsglist"] = msglist;
+                //resp["offlinemsglist"] = msglist;
                 offlineMsgOperate_.removeOfflineMsg(user.get_id()); // 删除对应的消息
             }
             string chipertext = serverMsgEncrtpt(conn, resp);
@@ -303,7 +303,6 @@ void ChatService::ServerOffline()
     lock_guard<mutex> lock(ConnMapMutex_);
     for (auto it=userConnMap_.begin(); it!=userConnMap_.end(); it++)
     {
-        cout<<it->first<<endl;
         useroperate_.resetUserState(it->first);
         auto redisConn = redisPool_->getConnection();
         redisConn->hdel("onlineUser", to_string(it->first));
