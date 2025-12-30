@@ -15,8 +15,8 @@ endif()
 
 #指定生成可执行文件
 add_executable(ChatServer ${SRC_LIST} ${DB_LIST} ${DATAOPERATE_LIST} ${REDIS_LIST} ${PUBLIC_LIST})
-add_executable(test ${TEST_LIST} ${DB_LIST} ${DATAOPERATE_LIST} ${REDIS_LIST} ${PUBLIC_LIST})
+#add_executable(test ${TEST_LIST} ${DB_LIST} ${DATAOPERATE_LIST} ${REDIS_LIST} ${PUBLIC_LIST})
 
 #添加链接库
 target_link_libraries(ChatServer muduo_net muduo_base mysqlclient hiredis pthread ${OPENSSL_LIBRARIES})
-target_link_libraries(test muduo_net muduo_base mysqlclient hiredis pthread ${OPENSSL_LIBRARIES})
+#target_link_libraries(test muduo_net muduo_base mysqlclient hiredis pthread ${OPENSSL_LIBRARIES})

@@ -29,7 +29,4 @@ src/server/CMakeFiles/test.dir/redis/redis.cpp.o
  ../include/server/redis/redis.hpp
  /home/yaoyao/code/ChatserverBaseofMuduo/src/server/redis/redis.cpp
 src/server/CMakeFiles/test.dir/test/test.cpp.o
- ../include/server/db/connectionpool.hpp
- ../include/server/db/mysqlconnection.hpp
- ../include/server/redis/redis.hpp
  /home/yaoyao/code/ChatserverBaseofMuduo/src/server/test/test.cpp

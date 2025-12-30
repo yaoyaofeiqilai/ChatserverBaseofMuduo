@@ -22,7 +22,7 @@ void showCurrentUserData()
         for (Group &group : currentUserGroupList)
         {
             cout << group.get_id() << " " << group.get_name() << " " << group.get_desc() << endl;
-            for (GroupUser &user : group.get_number())
+            for (GroupUser &user : (*group.get_number()))
             {
                 cout << user.get_id() << " " << user.get_name() << " " << user.get_state()
                      << " " << user.get_role() << endl;
@@ -64,7 +64,7 @@ void login(int &clientfd)
 
     // 加密
     request = msgEncryption(request);
-    uint32_t sendLen = htonl(request.size());  // 转为网络字节序
+    uint32_t sendLen = htonl(request.size());     // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, request.c_str(), request.size(), 0);
     if (len == -1)
@@ -96,6 +96,8 @@ void reg(int &clientfd)
     string request = js.dump();
     // 加密
     request = msgEncryption(request);
+    uint32_t sendLen = htonl(request.size());     // 转为网络字节序
+    int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, request.c_str(), request.length(), 0);
     if (len == -1)
     {
@@ -112,8 +114,8 @@ void readTaskHandler(int clientfd)
 
     for (;;)
     {
-        string buffer(1024, '0');
-        int len = recv(clientfd, &buffer[0], 1024, 0);
+        string buffer(10240, '0');
+        int len = recv(clientfd, &buffer[0], 10240, 0);
         if (len == -1 || len == 0)
         {
             cerr << "recv error" << endl;
@@ -138,15 +140,15 @@ void readTaskHandler(int clientfd)
         {
             cout << "[群消息：" << js["groupid"] << ']' << js["username"] << ':' << js["message"] << endl;
         }
-        if(msgtype==REG_MSG_ACK)
+        if (msgtype == REG_MSG_ACK)
         {
-            if(0==js["errno"])
+            if (0 == js["errno"])
             {
-                cout<<"register success! userid="<<js["userid"]<<endl;
+                cout << "register success! userid=" << js["userid"] << endl;
             }
             else
             {
-                cout<<"register failed! errmsg="<<js["errmsg"]<<endl;
+                cout << "register failed! errmsg=" << js["errmsg"] << endl;
             }
         }
         if (msgtype == RAS_KEY_MSG)
@@ -155,15 +157,15 @@ void readTaskHandler(int clientfd)
             keyHandler(clientfd, js);
             keyflag = true;
         }
-        if(msgtype==CREATE_GROUP_MSG_ACK)
+        if (msgtype == CREATE_GROUP_MSG_ACK)
         {
-            if(0==js["errno"])
+            if (0 == js["errno"])
             {
-                cout<<"create group success! groupid="<<js["groupid"]<<endl;
+                cout << "create group success! groupid=" << js["groupid"] << endl;
             }
             else
             {
-                cout<<"create group failed! errmsg="<<js["errmsg"]<<endl;
+                cout << "create group failed! errmsg=" << js["errmsg"] << endl;
             }
         }
         if (msgtype == LOGIN_MSG_ACK)
@@ -222,7 +224,7 @@ void loginReaction(json response)
                     guser.set_name(userjs["numbername"].get<string>());
                     guser.set_state(userjs["numberstate"].get<string>());
                     guser.set_role(userjs["numberrole"].get<string>());
-                    group.get_number().push_back(guser);
+                    group.get_number()->push_back(guser);
                 }
                 currentUserGroupList.push_back(group);
             }
@@ -329,7 +331,7 @@ void chat(int clientfd, string str)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -380,7 +382,7 @@ void creategroup(int clientfd, string str)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -399,7 +401,7 @@ void addgroup(int clientfd, string str)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -426,7 +428,7 @@ void groupchat(int clientfd, string str)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -445,7 +447,7 @@ void loginout(int clientfd, string)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.length(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send massage failed" << endl;
     }
@@ -503,7 +505,7 @@ void keyHandler(int &clientfd, json &js)
     uint32_t sendLen = htonl(cipherText.size());  // 转为网络字节序
     int lenHead = send(clientfd, &sendLen, 4, 0); // 先发长度
     int len = send(clientfd, cipherText.c_str(), cipherText.size(), 0);
-    if (len == -1||lenHead==-1)
+    if (len == -1 || lenHead == -1)
     {
         cerr << "send aes key error" << endl;
     }

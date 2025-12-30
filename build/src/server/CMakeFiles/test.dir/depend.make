@@ -28,8 +28,5 @@ src/server/CMakeFiles/test.dir/db/mysqlconnection.cpp.o: ../src/server/db/mysqlc
 src/server/CMakeFiles/test.dir/redis/redis.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/test.dir/redis/redis.cpp.o: ../src/server/redis/redis.cpp
 
-src/server/CMakeFiles/test.dir/test/test.cpp.o: ../include/server/db/connectionpool.hpp
-src/server/CMakeFiles/test.dir/test/test.cpp.o: ../include/server/db/mysqlconnection.hpp
-src/server/CMakeFiles/test.dir/test/test.cpp.o: ../include/server/redis/redis.hpp
 src/server/CMakeFiles/test.dir/test/test.cpp.o: ../src/server/test/test.cpp
 

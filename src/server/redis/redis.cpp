@@ -53,7 +53,7 @@ bool Redis::connect(std::string ip, std::string user, std::string password, std:
 // 向redis指定的通道channel发布消息
 bool Redis::publish(string channel, string message)
 {
-    redisReply *reply = (redisReply *)redisCommand(context_, "PUBLISH %s %s", channel, message.c_str());
+    redisReply *reply = (redisReply *)redisCommand(context_, "PUBLISH %s %s", channel.c_str(), message.c_str());
     if (nullptr == reply)
     {
         cerr << "publish command failed!" << endl;
@@ -61,12 +61,11 @@ bool Redis::publish(string channel, string message)
     }
     if(reply->type == REDIS_REPLY_INTEGER)
     {
-        cerr << "发布成功" << reply->integer<<endl;
         freeReplyObject(reply);
-        return false;
+        return true;
     }
     freeReplyObject(reply);
-    return true;
+    return false;
 }
 
 // 向redis指定的通道subscribe订阅消息
@@ -119,15 +118,15 @@ bool Redis::unsubscribe(string channel)
 // 在独立线程中接收订阅通道中的消息
 void Redis::observer_channel_message()
 {
+    cout<<"开始监听"<<endl;
     redisReply *reply = nullptr;
     while (REDIS_OK == redisGetReply(this->context_, (void **)&reply))
     {
-        cout<<"收到心得消息"<<endl;
         // 订阅收到的消息是一个带三元素的数组
         if (reply != nullptr && reply->element[2] != nullptr && reply->element[2]->str != nullptr)
         {
             // 给业务层上报通道上发生的消息
-            notify_message_handler_(atoi(reply->element[1]->str), reply->element[2]->str);
+            notify_message_handler_(reply->element[2]->str);
         }
 
         freeReplyObject(reply);
@@ -136,7 +135,7 @@ void Redis::observer_channel_message()
     cerr << ">>>>>>>>>>>>> observer_channel_message quit <<<<<<<<<<<<<" << endl;
 }
 
-void Redis::init_notify_handler(function<void(int, string)> fn)
+void Redis::init_notify_handler(function<void(string)> fn)
 {
     this->notify_message_handler_ = fn;
 }
@@ -188,6 +187,48 @@ bool Redis::hset(string key, string field, string value)
     return status;
 }
 
+bool Redis::sadd(string key,string value)
+{
+    redisReply *reply = (redisReply *)redisCommand(context_, "SADD %s %s", key.c_str(), value.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "Sadd command failed!" << endl;
+        return false;
+    }
+
+    bool status = false;
+    if (reply->type == REDIS_REPLY_INTEGER && reply->integer >= 0)
+    {
+        status = true;
+    }
+    freeReplyObject(reply);
+    return status;
+}
+
+vector<string> Redis::smembers(string key)
+{
+    vector<string> members;
+    redisReply *reply = (redisReply *)redisCommand(context_, "SMEMBERS %s", key.c_str());
+    if (nullptr == reply)
+    {
+        cerr << "Smembers command failed!" << endl;
+        return members;
+    }
+
+    if (reply->type == REDIS_REPLY_ARRAY)
+    {
+        for (int i = 0; i < reply->elements; i++)
+        {
+            if (reply->element[i]->type == REDIS_REPLY_STRING)
+            {
+                members.push_back(reply->element[i]->str);
+            }
+        }
+    }
+    freeReplyObject(reply);
+    return members;
+}
+
 // 添加群组成员
 bool Redis::lpush(string key, string value)
 {
@@ -202,6 +243,7 @@ bool Redis::lpush(string key, string value)
     if (reply->type == REDIS_REPLY_INTEGER && reply->integer >= 0)
     {
         status = true;
+        cout<<"添加成功"<<endl;
     }
     freeReplyObject(reply);
     return status;

@@ -43,9 +43,9 @@ class Group
     {
         return desc;
     }
-    vector<GroupUser> get_number()
+    vector<GroupUser>* get_number()
     {
-        return number;
+        return &number;
     }
 
     //设置值

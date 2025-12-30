@@ -8,7 +8,7 @@ sem_t acksem;
 void func(int seq)
 {
     string ip = "127.0.0.1";
-    uint16_t port = atoi("8000");
+    uint16_t port = atoi("6000");
     // 创建客户端网络嵌套字scoket
     int clientfd = socket(AF_INET, SOCK_STREAM, 0);
     if (clientfd == -1)
@@ -147,7 +147,7 @@ void func(int seq)
         // 随机向一名用户发送信息
         json chatjs;
         chatjs["msgid"] = ONE_CHAT_MSG;
-        int toid = rand() % 20000 + 10000;
+        int toid = rand() % 10000 + 10000;
         chatjs["to"] = toid;
         chatjs["from"] = seq + 10000;
         chatjs["name"] = "testuser" + to_string(seq);

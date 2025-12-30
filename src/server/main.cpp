@@ -9,6 +9,13 @@ static string user = "root";
 static string password = "Lsg20041013.";
 static string dbname = "chat";
 using namespace std;
+
+void ServerOver(int sig)
+{
+    ChatService::instance()->ServerOffline();
+    exit(0);
+}
+
 int main(int argc, char **argv)
 {
      if (argc < 3)
@@ -18,7 +25,7 @@ int main(int argc, char **argv)
     }
     string ip = argv[1];
     uint16_t port = atoi(argv[2]);
-    signal(SIGINT, ChatService::ServerOffline);
+    signal(SIGINT, ServerOver);
     // 事件循环，作为参数传入server中
     EventLoop loop;
     InetAddress addr(ip, port);

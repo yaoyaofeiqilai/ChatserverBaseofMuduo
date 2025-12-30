@@ -31,7 +31,7 @@ public:
     void observer_channel_message();
 
     // 初始化监听的回调函数
-    void init_notify_handler(function<void(int, string)> func);
+    void init_notify_handler(function<void(string)> func);
 
     void beginlisten();
     void updateTime(); // 更新使用时间
@@ -45,6 +45,8 @@ public:
     bool lpush(string key, string value);
     bool del(string key);
     bool hdel(string key, string field);
+    bool sadd(string key,string value);
+    vector<string> smembers(string key);
     // 获取数据,get
     vector<string> lrange(string key, int start, int end);
     string hget(string key, string field);
@@ -54,7 +56,7 @@ private:
     // 负责发布消息的context
     redisContext *context_;
     // 回调函数,收到订阅消息时回调
-    function<void(int, string)> notify_message_handler_;
+    function<void(string)> notify_message_handler_;
     // 上次使用时间
     chrono::steady_clock::time_point lastTime_;
 };

@@ -32,7 +32,7 @@ class ChatService
     static ChatService* instance();
 
      //处理服务器ctrl+c退出,重置用户状态
-    static void ServerOffline(int);
+    void ServerOffline();
 
     //登录信息的处理方法
     void login(const TcpConnectionPtr&,json&,Timestamp);
@@ -65,7 +65,7 @@ class ChatService
     void userLoginout(const TcpConnectionPtr&,json&,Timestamp);
 
     //处理从redis上监听的信息处理函数
-    void redisMessageHandler(int userid,string message);
+    void redisMessageHandler(string message);
 
     //处理客户端发送来的密钥
     void clientAESkey(const TcpConnectionPtr &conn, json &js, Timestamp time);

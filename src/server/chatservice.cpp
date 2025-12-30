@@ -37,7 +37,8 @@ ChatService::ChatService()
 
     if (subscribeRedis_.connect("127.0.0.1", "", "yaoyaofeiqilai1111", "", 6379))
     { // 订阅消息
-        subscribeRedis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1, _2));
+        subscribeRedis_.init_notify_handler(bind(&ChatService::redisMessageHandler, this, _1));
+        cout << "服务器id" << serverName_ << endl;
         subscribeRedis_.subscribe(serverName_);
         subscribeRedis_.beginlisten();
     }
@@ -122,14 +123,14 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
                     grpjs["groupname"] = group.get_name();
                     grpjs["groupdesc"] = group.get_desc();
                     vector<string> uservec;
-                    for (auto &user : group.get_number())
+                    for (auto &user : (*group.get_number()))
                     {
                         json js;
                         js["numberid"] = user.get_id();
                         js["numbername"] = user.get_name();
                         js["numberstate"] = user.get_state();
                         js["numberrole"] = user.get_role();
-                        redisConn->lpush(to_string(group.get_id()), std::to_string(user.get_id()));
+                        redisConn->sadd(to_string(group.get_id()), std::to_string(user.get_id()));
                         uservec.push_back(js.dump());
                     }
                     grpjs["numberlist"] = uservec; // 群组成员
@@ -175,6 +176,12 @@ void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp
         }
     }
 
+    // 删除redis中的用户信息
+    {
+        auto redisConn = redisPool_->getConnection();
+        redisConn->hdel("onlineUser", to_string(userid));
+    }
+
     // 修改状态
     User user;
     user.set_id(userid);
@@ -184,11 +191,10 @@ void ChatService::userLoginout(const TcpConnectionPtr &conn, json &js, Timestamp
 // 注册信息的处理方法
 void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time)
 {
-    //
     // 接收json对象中的数据
     string name = js["name"];
     string pwd = js["password"];
-    cout << js.dump() << endl;
+    //cout << js.dump() << endl;
     // 根据数据创建对象
     User user;
     user.set_name(name);
@@ -242,13 +248,15 @@ void ChatService::closeException(const TcpConnectionPtr &conn)
             {
                 user.set_id(it->first);
                 userConnMap_.erase(it);
+                // 删除缓存数据库中的信息
+                {
+                    auto redisConn = redisPool_->getConnection();
+                    redisConn->hdel("onlineUser", to_string(user.get_id()));
+                }
                 break;
             }
         }
     }
-
-    // 取消订阅channel
-    // redis_.unsubscribe(user.get_id());
 
     // 更新用户状态
     user.set_state("offline");
@@ -283,8 +291,6 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
     if (serverName != "")
     {
         // 转发信息
-        cout << "命中111" << endl;
-        cout<<serverName<<endl;
         redisConn->publish(serverName, js.dump());
     }
     // 收件人不在线，将消息存储在数据库中，等下次上线时转发
@@ -292,9 +298,17 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
 }
 
 // 服务器断开时重置用户状态,静态
-void ChatService::ServerOffline(int a)
+void ChatService::ServerOffline()
 {
-    ChatService::instance()->useroperate_.resetUserState();
+    lock_guard<mutex> lock(ConnMapMutex_);
+    for (auto it=userConnMap_.begin(); it!=userConnMap_.end(); it++)
+    {
+        cout<<it->first<<endl;
+        useroperate_.resetUserState(it->first);
+        auto redisConn = redisPool_->getConnection();
+        redisConn->hdel("onlineUser", to_string(it->first));
+    }
+    cout << "服务器已退出" << endl;
     exit(0);
 }
 
@@ -352,7 +366,7 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
     int userid = js["userid"];
     auto redisConn = redisPool_->getConnection();
     // 去redis数据库中查询
-    vector<string> tmp = redisConn->lrange(to_string(groupid), 0, -1);
+    vector<string> tmp = redisConn->smembers(to_string(groupid));
     vector<int> numid;
     if (tmp.empty())
     { // 去Mysql数据库中查询
@@ -360,7 +374,6 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
     }
     else
     {
-        cout<<"命中"<<endl;
         for (auto &id : tmp)
         {
             numid.push_back(stoi(id));
@@ -372,21 +385,23 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
         lock_guard<mutex> lock(ConnMapMutex_);
         for (auto &num : numid)
         {
+            if(num==userid)continue; // 如果是自己,则不转发
             auto it = userConnMap_.find(num);
             if (it != userConnMap_.end())
             {
                 // 用户在线直接转发
+                js["to"] = num;
                 string chipertext = serverMsgEncrtpt(it->second, js);
                 userConnMap_[num]->send(chipertext);
             }
             else
             {
-                // 是否在其他服务器上登录
-                User user = useroperate_.query(num);
-                if (user.get_state() == "online")
+                string serverName=redisConn->hget("onlineUser", to_string(num));
+                if (serverName!="")
                 {
                     // 发布到redis中
-                    // redis_.publish(num, js.dump());
+                    js["to"] = num;
+                    redisConn->publish(serverName, js.dump());
                 }
                 else
                 { // 存入离线消息列表
@@ -398,18 +413,22 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
 }
 
 // 处理从redis上监听的信息处理函数
-void ChatService::redisMessageHandler(int userid, string message)
+void ChatService::redisMessageHandler(string message)
 {
-    lock_guard<mutex> lock(ConnMapMutex_);
-    auto it = userConnMap_.find(userid);
-    if (it != userConnMap_.end())
+    // 解析字符串
+    json js = json::parse(message);
+    int userid = js["to"];
     {
-        it->second->send(message);
-        return;
+        lock_guard<mutex> lock(ConnMapMutex_);
+        auto it = userConnMap_.find(userid);
+        if (it != userConnMap_.end())
+        {
+            // 收件人在线,直接转发信息
+            string chipertext = serverMsgEncrtpt(it->second, js);
+            it->second->send(chipertext);
+            return;
+        }
     }
-
-    // 用户已经下线
-    offlineMsgOperate_.insertOfflineMsg(userid, message);
 }
 
 // AES密钥交换

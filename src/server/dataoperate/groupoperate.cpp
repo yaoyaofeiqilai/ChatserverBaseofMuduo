@@ -43,14 +43,14 @@ bool GroupOperata::addGroup(int userid, int groupid, string role)
 vector<int> GroupOperata::queryNumber(int groupid, int userid)
 {
     //需要预编译的sql语句
-    string sql="select userid from GroupUser where groupid=? and userid !=?";
+    string sql="select userid from GroupUser where groupid=? ";
     
     vector<int> idVec;
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        QueryResult res = conn->query(sql,groupid,userid);
+        QueryResult res = conn->query(sql,groupid);
         if (!res.empty())
         {
            for(auto &row:res)
@@ -101,7 +101,7 @@ vector<Group> GroupOperata::queryGroup(int userid)
                 guser.set_name(row["name"]);
                 guser.set_role(row["grouprole"]);
                 guser.set_state(row["state"]);
-                group.get_number().push_back(guser);
+                group.get_number()->push_back(guser);
             }
         }
     }

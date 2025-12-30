@@ -68,16 +68,14 @@ bool UserOperate::update_state(User &user)
 }
 
 // 重置用户的状态信息
-bool UserOperate::resetUserState()
+bool UserOperate::resetUserState(int userid)
 {
-    char sql[1024];
-    sprintf(sql, "update user set state='offline'");
-
+    string sql="update user set state='offline' where id=?";
     ConnectionPool<MysqlConnection> *pool = ConnectionPool<MysqlConnection>::getInstance();
     shared_ptr<MysqlConnection> conn = pool->getConnection();
     if (conn)
     {
-        if (conn->update(sql))
+        if (conn->update(sql,userid))
         {
             return true;
         }

@@ -1,24 +1,39 @@
-#include <iostream>
-#include "redis.hpp"
-#include <thread>
-#include <string>
-#include "connectionpool.hpp"
-int main()
-{
-    Redis redis;
-    redis.connect("127.0.0.1", "", "yaoyaofeiqilai1111", "", 6379);
-    // 插入一个数据
-    redis.hset("onlineUser", to_string(1111), "Server01");
-    redis.hset("onlineUser", to_string(1112), "Server01");
-    redis.hset("onlineUser", to_string(333), "Server02");
-    redis.hset("onlineUser", to_string(144), "Server01");
-    redis.hset("onlineUser", to_string(1666), "Server03");
- 
-    //连接池
-    auto pool=ConnectionPool<Redis>::getInstance();
-    pool->init_pool("127.0.0.1", 6379, "", "yaoyaofeiqilai1111", "", 16, 1024, 60, 5000);
+// #include <iostream>
+// #include "redis.hpp"
+// #include <thread>
+// #include <string>
+// #include <functional>
+// #include "connectionpool.hpp"
+// void test(int a, string s)
+// {
+//     cout << "test函数" << endl;
+// }
+// int main()
+// {
+//     // 连接池
+//     auto pool = ConnectionPool<Redis>::getInstance();
+//     pool->init_pool("127.0.0.1", 6379, "", "yaoyaofeiqilai1111", "", 16, 1024, 60, 5000);
 
-   auto conn= pool->getConnection();
-   conn->hset("onlineUser", to_string(123), "Server03");
-    return 0;
-}
+//     auto conn = pool->getConnection();
+//     conn->hset("onlineUser", to_string(123), "Server03");
+
+//     if (conn->subscribe("ChatServer1111"))
+//     {
+//         cout << "订阅成功" << endl;
+//         conn->init_notify_handler(function<void(int, string)>(test));
+//         conn->beginlisten();
+//     }
+//     else
+//     {
+//         cout << "订阅失败" << endl;
+//     }
+
+//     auto conn2 = pool->getConnection();
+//     conn2->publish("ChatServer1111", "Hello, World!");
+//     conn2->publish("ChatServer1111", "Hello, World2!");
+//     conn2->publish("ChatServer1111", "Hello, World3!");
+
+//     int a;
+//     cin >> a;
+//     return 0;
+// }

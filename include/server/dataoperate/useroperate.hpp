@@ -18,7 +18,7 @@ class UserOperate
     //更改用户的状态
     bool update_state(User& user);
 
-    bool resetUserState(); //重置用户的状态信息
+    bool resetUserState(int userid); //重置用户的状态信息
 
     //添加好友
     bool insertFriend(int userid,int friendid);
